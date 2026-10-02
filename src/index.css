@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+/*
+ * Breakpoints de la spec (todas las vistas tienen que ser responsive):
+ *   mobile  : < 767px    (sin prefijo)
+ *   tablet  : 768–1024px (prefijo md:)
+ *   desktop : > 1025px   (prefijo lg:)
+ * Tailwind trae lg en 1024px; lo movemos a 1025px para respetar la spec.
+ */
+@theme {
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1025px;
+}

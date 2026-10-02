@@ -1,0 +1,27 @@
+# supabase/config.toml — Configuración local de Supabase (CLI).
+# Módulo: Setup.
+#
+# TODO(SETUP): completar con `supabase init` / `supabase link` y revisar puertos y auth.
+
+project_id = "sgi-deca"
+
+[api]
+enabled = true
+
+[db]
+major_version = 15
+
+[auth]
+enabled = true
+# TODO(SETUP): sin auto-registro (el Gerente crea las cuentas de Capacitador, spec §1).
+enable_signup = false
+
+[storage]
+enabled = true
+
+# --- Edge Functions ---------------------------------------------------------
+# Por defecto todas exigen JWT válido (401 si falta, spec §API).
+# La consulta pública por DNI es la ÚNICA sin login.
+# PERMISOS: la función igual valida DNI exacto y no devuelve listados (M7).
+[functions.certificates-by-dni]
+verify_jwt = false

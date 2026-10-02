@@ -1,0 +1,52 @@
+-- 0002_puestos_y_personal.sql
+-- Módulos: M3 · Puestos, M2 · Personal, M1 · perfiles de usuario
+-- ESTRUCTURA COMENTADA: lo ejecutable lo escribe quien tome el Setup (TODO(SETUP)).
+
+-- ============================================================
+-- Tabla: profiles  (M1) — rol de cada usuario de Supabase Auth
+-- ============================================================
+-- id          uuid  PK, FK -> auth.users(id) on delete cascade
+-- nombre      text  not null
+-- rol         user_role not null            -- un único rol por usuario (spec §1)
+-- created_at  timestamptz not null default now()
+-- TODO(SETUP): decidir si el rol vive acá o en app_metadata del JWT (afecta a las policies RLS).
+-- RLS esperada:
+--   select: cada usuario lee su propio perfil; el Gerente lee todos.
+--   insert/update/delete: solo vía Edge Function create-trainer-user (service role).
+
+-- ============================================================
+-- Tabla: positions  (M3)
+-- ============================================================
+-- id           uuid  PK default gen_random_uuid()
+-- nombre       text  not null
+-- descripcion  text  not null default ''
+-- activo       boolean not null default true
+-- Constraints : UNIQUE (nombre)                      -- spec §3: no dos puestos con el mismo nombre
+--               (considerar unicidad case-insensitive: unique index sobre lower(nombre))
+-- REGLA DE NEGOCIO: no se borra un puesto con personal o temas asociados; se desactiva. FKs con ON DELETE RESTRICT.
+-- RLS esperada:
+--   select: Gerente y Capacitador.
+--   insert/update/delete: solo Gerente.
+
+-- ============================================================
+-- Tabla: personnel  (M2)
+-- ============================================================
+-- id             uuid  PK default gen_random_uuid()
+-- dni            text  not null                      -- formato a validar (solo dígitos)
+-- nombre         text  not null
+-- apellido       text  not null
+-- position_id    uuid  not null FK -> positions(id) ON DELETE RESTRICT
+-- fecha_ingreso  date  not null
+-- activo         boolean not null default true
+-- created_at     timestamptz not null default now()
+-- updated_at     timestamptz not null default now()  -- trigger para mantenerlo
+-- Constraints : UNIQUE (dni)                         -- spec §2: no dos personas con el mismo DNI
+--               CHECK de formato de DNI
+-- Índices     : (apellido, nombre) para orden y búsqueda; (fecha_ingreso); (position_id); (activo)
+-- REGLA DE NEGOCIO: no se elimina una persona con capacitaciones o certificados; se desactiva.
+-- REGLA DE NEGOCIO: el puesto "vivo" de acá puede cambiar; el puesto histórico se guarda en training_attendees (0005).
+-- REGLA DE NEGOCIO: el puesto debe existir y estar activo al crear/asignar (validar en trigger o Edge Function).
+-- RLS esperada:
+--   select: Gerente y Capacitador (el Operario NO accede por tabla; solo por Edge Function certificates-by-dni).
+--   insert/update/delete: solo Gerente.
+--   Paginación: server-side, 25 por página (range desde el cliente).

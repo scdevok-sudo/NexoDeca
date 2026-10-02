@@ -1,0 +1,26 @@
+-- 0007_reportes.sql
+-- Módulo: M9 · Reporte mensual YPF
+-- ESTRUCTURA COMENTADA: lo ejecutable lo escribe quien tome el Setup (TODO(SETUP)).
+
+-- ============================================================
+-- Tabla: monthly_reports   (histórico de reportes generados)
+-- ============================================================
+-- id            uuid PK default gen_random_uuid()
+-- year          integer  not null
+-- month         smallint not null CHECK (month between 1 and 12)
+-- version       integer  not null default 1          -- generar el mismo mes dos veces crea versión nueva
+-- formato       text     not null                    -- 'pdf' | 'xlsx' (decisión pendiente con Juan)
+-- storage_path  text     not null                    -- ruta en el bucket privado (ver 0009)
+-- generado_por  uuid     not null FK -> profiles(id)
+-- generado_el   timestamptz not null default now()
+-- Constraints : UNIQUE (year, month, version)
+-- Índices     : (year, month)
+-- REGLA DE NEGOCIO: el reporte generado se guarda como archivo histórico (no se regenera al vuelo) para poder
+--   reconstruir exactamente lo que se le entregó a YPF.
+-- REGLA DE NEGOCIO: puede generarse con el mes en curso incompleto.
+-- TODO(consultar a Santi): ¿las capacitaciones anuladas figuran en el reporte?
+
+-- RLS esperada (se detalla en 0008):
+--   select: Gerente y Capacitador.
+--   insert: Gerente y Capacitador (vía Edge Function monthly-report).
+--   update/delete: nadie.

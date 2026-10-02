@@ -1,0 +1,52 @@
+-- 0005_capacitaciones_y_asistencia.sql
+-- Módulo: M6 · Dictado de Capacitaciones y Registro de Asistencia
+-- ESTRUCTURA COMENTADA: lo ejecutable lo escribe quien tome el Setup (TODO(SETUP)).
+
+-- ============================================================
+-- Secuencia: training_registration_seq
+-- ============================================================
+-- REGLA DE NEGOCIO: número de registro correlativo automático que NO se reutiliza jamás
+--   (aunque se anule la capacitación). Usar una SEQUENCE; no calcularlo con MAX()+1.
+--   Ojo: una secuencia puede dejar huecos si falla una transacción; la spec pide "sin huecos ni duplicados"
+--   en lo que aparece en certificados. TODO(consultar a Santi): ¿se tolera un hueco por rollback?
+
+-- ============================================================
+-- Tabla: trainings
+-- ============================================================
+-- id                  uuid PK default gen_random_uuid()
+-- topic_id            uuid not null FK -> training_topics(id) ON DELETE RESTRICT
+-- fecha               date not null
+-- trainer_id          uuid not null FK -> profiles(id)           -- capacitador responsable
+-- duracion_horas      numeric not null CHECK (duracion_horas > 0)
+-- temario             text not null default ''
+-- nro_registro        bigint not null default nextval('training_registration_seq')
+-- estado              training_status not null default 'abierta'  -- 'anulada' en vez de DELETE
+-- voided_at / voided_by                                           -- trazabilidad de la anulación
+-- created_at / updated_at timestamptz
+-- Constraints : UNIQUE (nro_registro)
+-- Índices     : (topic_id), (fecha), (trainer_id), (estado)
+-- REGLA DE NEGOCIO: NUNCA DELETE físico. Se anula con estado; el nro_registro queda marcado y no se reutiliza.
+--   -> sin policy de DELETE para nadie; considerar un trigger que bloquee DELETE.
+-- REGLA DE NEGOCIO: con certificado generado no se puede editar ni anular (409).
+-- TODO(consultar a Santi): definir el "cierre" (abierta -> cerrada) y qué lo dispara (genera los certificados, M7).
+
+-- ============================================================
+-- Tabla: training_attendees
+-- ============================================================
+-- training_id          uuid not null FK -> trainings(id) ON DELETE RESTRICT
+-- person_id            uuid not null FK -> personnel(id) ON DELETE RESTRICT
+-- resultado            attendance_result not null
+-- position_id_at_time  uuid not null FK -> positions(id)   -- REGLA DE NEGOCIO: puesto AL MOMENTO del curso,
+--                                                          -- copiado acá; NO se calcula en vivo desde personnel.
+-- aplicabilidad        applicability not null              -- obligatorio | electivo | no_corresponde (lo calcula el servidor)
+-- PK (training_id, person_id)
+-- Índices     : (person_id) para historial por persona y vencimientos (M8)
+-- REGLA DE NEGOCIO: "no corresponde" es alerta, no bloqueo.
+-- REGLA DE NEGOCIO: personas inactivas no se pueden incorporar a capacitaciones nuevas.
+
+-- RLS esperada (se detalla en 0008):
+--   select: Gerente (todas), Capacitador (las propias).
+--           TODO(consultar a Santi): ¿el Capacitador ve solo las propias o todas? (decisión pendiente).
+--   insert: Capacitador (trainer_id = auth.uid()).
+--   update: Capacitador sobre las propias y sin certificados; Gerente solo para anular.
+--   delete: nadie.

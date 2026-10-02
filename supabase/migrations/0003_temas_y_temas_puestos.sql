@@ -1,0 +1,32 @@
+-- 0003_temas_y_temas_puestos.sql
+-- Módulo: M4 · Catálogo de Capacitaciones (Temas)
+-- ESTRUCTURA COMENTADA: lo ejecutable lo escribe quien tome el Setup (TODO(SETUP)).
+
+-- ============================================================
+-- Tabla: training_topics
+-- ============================================================
+-- id                   uuid  PK default gen_random_uuid()
+-- nombre               text  not null
+-- tipo                 topic_type not null            -- obligatorio | electivo
+-- periodicidad_meses   integer null CHECK (periodicidad_meses > 0)   -- null = el tema no vence (ej. inducción única)
+-- duracion_horas       numeric not null CHECK (duracion_horas > 0)
+-- activo               boolean not null default true
+-- created_at / updated_at timestamptz
+-- Constraints : UNIQUE (nombre)                       -- spec §4
+-- Índices     : (tipo), (activo)
+-- REGLA DE NEGOCIO: un tema inactivo no entra en planes nuevos; lo ya dictado no cambia.
+
+-- ============================================================
+-- Tabla: topic_positions   (relación N:M temas <-> puestos)
+-- ============================================================
+-- topic_id     uuid not null FK -> training_topics(id) ON DELETE CASCADE
+-- position_id  uuid not null FK -> positions(id)       ON DELETE RESTRICT
+-- PK (topic_id, position_id)
+-- Índices     : (position_id)
+-- REGLA DE NEGOCIO: cambiar los puestos de un tema NO afecta capacitaciones ya dictadas
+--   (la aplicabilidad de cada asistente queda guardada en training_attendees, 0005).
+-- REGLA DE NEGOCIO: un puesto inactivo no se puede asociar a temas nuevos.
+
+-- RLS esperada (se detalla en 0008):
+--   select: Gerente y Capacitador.
+--   insert/update/delete: solo Gerente.

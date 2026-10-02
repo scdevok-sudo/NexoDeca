@@ -1,0 +1,29 @@
+-- 0006_certificados.sql
+-- Módulo: M7 · Certificados
+-- ESTRUCTURA COMENTADA: lo ejecutable lo escribe quien tome el Setup (TODO(SETUP)).
+
+-- ============================================================
+-- Tabla: certificates   (un registro por PDF generado; versionado)
+-- ============================================================
+-- id             uuid PK default gen_random_uuid()
+-- training_id    uuid not null FK -> trainings(id)  ON DELETE RESTRICT
+-- person_id      uuid not null FK -> personnel(id)  ON DELETE RESTRICT
+-- version        integer not null default 1
+-- vigente        boolean not null default true      -- la versión que se muestra; las viejas quedan de histórico
+-- storage_path   text not null                      -- ruta en el bucket privado (ver 0009)
+-- generado_el    timestamptz not null default now()
+-- Constraints : UNIQUE (training_id, person_id, version)
+--               índice único parcial: solo UNA versión vigente por (training_id, person_id)
+-- Índices     : (person_id), (training_id)
+-- REGLA DE NEGOCIO: el PDF es inmutable. Si hay que corregir, se genera una versión nueva (vigente) y la vieja
+--   queda de histórico. NUNCA sobrescribir el archivo (auditoría YPF, spec §7).
+-- REGLA DE NEGOCIO: solo se genera certificado a quienes quedaron en resultado 'aprobado'.
+-- TODO(consultar a Santi): spec §7 permite "corregir y regenerar", pero §6 y la API bloquean (409) editar/anular
+--   una capacitación con certificado. Resolver cómo se corrige un error ya certificado.
+
+-- RLS esperada (se detalla en 0008):
+--   select: Gerente y Capacitador.
+--   insert: solo la Edge Function generate-certificates (service role).
+--   update: solo service role (marcar vigente=false al regenerar). delete: nadie.
+--   El Operario NO accede por tabla: solo por la Edge Function certificates-by-dni (DNI exacto).
+-- PRIVACIDAD: ninguna policy ni vista puede permitir listar certificados de otras personas sin autenticación.

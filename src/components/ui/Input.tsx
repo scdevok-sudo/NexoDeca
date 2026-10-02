@@ -1,0 +1,26 @@
+/**
+ * components/ui/Input.tsx — Campo de texto con label y error.
+ * Módulo: Setup.
+ *
+ * TODO(SETUP): usar forwardRef/ref como prop para integrarlo con react-hook-form (register).
+ */
+
+import type { InputHTMLAttributes } from 'react';
+
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+}
+
+export function Input({ label, error, className = '', ...rest }: Props) {
+  return (
+    <label className="block text-sm">
+      {label && <span className="mb-1 block font-medium text-slate-700">{label}</span>}
+      <input
+        className={'w-full rounded border border-slate-300 px-3 py-2 ' + className}
+        {...rest}
+      />
+      {error && <span className="mt-1 block text-xs text-red-600">{error}</span>}
+    </label>
+  );
+}
