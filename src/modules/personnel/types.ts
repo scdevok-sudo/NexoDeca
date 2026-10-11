@@ -2,8 +2,7 @@
  * types.ts — Tipos e interfaces del módulo.
  * Módulo: M2 · Gestión de Personal (spec §2)
  *
- * Qué tiene que hacer:
- *  - Ajustar los tipos a lo que devuelva realmente Supabase (database.types.ts).
+ * TODO(SETUP): cuando exista database.types.ts, tipar las filas con Database['public']['Tables']['personnel'].
  */
 
 import type { UUID, ISODate } from '../../types/common';
@@ -38,6 +37,8 @@ export interface PersonInput {
   apellido: string;
   puestoId: UUID;
   fechaIngreso: ISODate;
+  /** Solo en edición: permite reactivar a alguien desactivado. */
+  activo?: boolean;
 }
 
 export interface ImportRejection {

@@ -8,16 +8,23 @@
  *  - PERMISOS: se verifican en RLS / Edge Functions; acá no alcanza con chequear el rol.
  */
 
+import { supabase } from '../../lib/supabase';
+import { fromPostgrestError } from '../../lib/apiError';
 import type { Paginated, UUID } from '../../types/common';
 import type { Position, PositionInput } from './types';
 
 /**
  * GET /positions
  * PERMISOS: Gerente, Capacitador
- * TODO(M3): Para los selectores solo activos; para el ABM del Gerente, todos.
+ * Para los selectores solo activos; para el ABM del Gerente, todos.
+ * (Implementado desde M2: el formulario de Personal lo necesita para el selector de puesto.)
  */
 export async function listPositions(opts?: { incluirInactivos?: boolean }): Promise<Position[]> {
-  throw new Error('Not implemented: listPositions');
+  let query = supabase.from('positions').select('id, nombre, descripcion, activo').order('nombre');
+  if (!opts?.incluirInactivos) query = query.eq('activo', true);
+  const { data, error } = await query;
+  if (error) throw fromPostgrestError(error);
+  return (data ?? []) as Position[];
 }
 
 /**
