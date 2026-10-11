@@ -2,13 +2,16 @@
  * auth/AuthProvider.tsx — Contexto de sesión (usuario + rol).
  * Módulo: M1 · Login y sesiones (spec §1)
  *
- * Qué tiene que hacer:
- *  - Cargar la sesión de Supabase Auth y el perfil (rol) del usuario.
- *  - Suscribirse a onAuthStateChange.
- *  - Exponer signIn / signOut.
+ * - Escucha onAuthStateChange (dispara INITIAL_SESSION al suscribirse, así que no hace falta getSession aparte).
+ * - Carga el perfil (rol) de la tabla profiles. Usuario de Auth sin perfil → se cierra la sesión.
+ * PERMISOS: el rol de acá solo decide qué UI mostrar; la seguridad real es RLS / Edge Functions.
  */
 
-import { createContext, useMemo, type ReactNode } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import type { Session } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
+import { queryClient } from '../lib/queryClient';
+import { fetchProfile, login, logout } from '../modules/login/api';
 import type { Role } from '../types/common';
 
 export interface AuthUser {
@@ -28,6 +31,7 @@ export interface AuthContextValue {
 export const AuthContext = createContext<AuthContextValue | null>(null);
 
 // STUB: en DEV, VITE_DEV_BYPASS_ROLE=gerente|capacitador simula una sesión para poder navegar las pantallas.
+// En `vite build` import.meta.env.DEV es false y este código queda muerto. Las llamadas a datos igual las corta RLS.
 function devBypassUser(): AuthUser | null {
   const rol = import.meta.env.VITE_DEV_BYPASS_ROLE;
   if (import.meta.env.DEV && (rol === 'gerente' || rol === 'capacitador')) {
@@ -37,21 +41,62 @@ function devBypassUser(): AuthUser | null {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // TODO(M1): reemplazar por la sesión real (supabase.auth.getSession + onAuthStateChange + lectura de profiles).
-  // REGLA DE NEGOCIO: las contraseñas las gestiona Supabase Auth, nunca hash a mano.
-  // PERMISOS: el rol que se usa para mostrar/ocultar UI sale del perfil, pero la seguridad real es RLS / Edge Functions.
+  const [user, setUser] = useState<AuthUser | null>(devBypassUser);
+  const [loading, setLoading] = useState(() => devBypassUser() === null);
+  const isBypass = devBypassUser() !== null;
+  // Evita que una carga de perfil vieja pise a una más nueva (logins/logouts rápidos).
+  const loadSeq = useRef(0);
+
+  const loadFromSession = useCallback(async (session: Session | null) => {
+    const seq = ++loadSeq.current;
+    if (!session) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+    try {
+      const profile = await fetchProfile(session.user.id, session.user.email ?? '');
+      if (seq !== loadSeq.current) return;
+      if (!profile) {
+        await supabase.auth.signOut();
+        setUser(null);
+      } else {
+        setUser(profile);
+      }
+    } catch {
+      if (seq === loadSeq.current) setUser(null);
+    } finally {
+      if (seq === loadSeq.current) setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isBypass) return;
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      // TOKEN_REFRESHED no cambia el usuario: no recargamos el perfil.
+      if (event === 'TOKEN_REFRESHED') return;
+      if (event === 'SIGNED_OUT') queryClient.clear();
+      // setTimeout: Supabase recomienda no llamar a otros métodos de supabase dentro del callback (deadlock).
+      setTimeout(() => void loadFromSession(session), 0);
+    });
+    return () => data.subscription.unsubscribe();
+  }, [isBypass, loadFromSession]);
+
+  const signIn = useCallback(async (email: string, password: string) => {
+    const profile = await login({ email, password });
+    loadSeq.current++;
+    setUser(profile);
+  }, []);
+
+  const signOut = useCallback(async () => {
+    loadSeq.current++;
+    setUser(null);
+    await logout();
+  }, []);
+
   const value = useMemo<AuthContextValue>(
-    () => ({
-      user: devBypassUser(),
-      loading: false,
-      signIn: async () => {
-        throw new Error('Not implemented: signIn');
-      },
-      signOut: async () => {
-        throw new Error('Not implemented: signOut');
-      },
-    }),
-    [],
+    () => ({ user, loading, signIn, signOut }),
+    [user, loading, signIn, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

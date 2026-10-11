@@ -10,7 +10,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import type { Role } from '../types/common';
 import { useAuth } from './useAuth';
 import { EmptyState } from '../components/ui/EmptyState';
@@ -22,12 +22,22 @@ interface Props {
 
 export function RequireRole({ roles, children }: Props) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) return <EmptyState title="Cargando sesión…" />;
-  // TODO(M1): recordar la ruta de origen para volver después del login.
-  if (!user) return <Navigate to="/login" replace />;
-  // TODO(M1): pantalla 403 propia.
-  if (!roles.includes(user.rol)) return <EmptyState title="No tenés permiso para ver esta pantalla" />;
+  if (!user) {
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  }
+  if (!roles.includes(user.rol)) {
+    return (
+      <div className="p-8 text-center">
+        <EmptyState title="No tenés permiso para ver esta pantalla" />
+        <Link to="/" className="text-sm text-slate-700 underline">
+          Volver al inicio
+        </Link>
+      </div>
+    );
+  }
 
   return <>{children}</>;
 }
