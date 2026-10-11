@@ -71,7 +71,7 @@ export function PersonnelDetailPage() {
               </div>
               <div>
                 <dt className="text-slate-500">Puesto actual</dt>
-                <dd>{p.puestoNombre ?? '—'}</dd>
+                <dd>{p.puestoNombre ?? 'Sin asignar'}</dd>
               </div>
               <div>
                 <dt className="text-slate-500">Fecha de ingreso</dt>

@@ -54,6 +54,8 @@ export function PersonnelFilters({ value, onChange }: Props) {
       <Input label="Nombre o apellido" maxLength={100} {...register('q')} />
       <Select
         label="Puesto"
+        // Si no se pueden cargar los puestos (ej. M3 pendiente) el selector queda deshabilitado, sin romper la pantalla.
+        disabled={positions.isLoading || positions.isError}
         options={[{ value: '', label: 'Todos' }].concat(
           (positions.data ?? []).map((p) => ({ value: p.id, label: p.activo ? p.nombre : p.nombre + ' (inactivo)' })),
         )}

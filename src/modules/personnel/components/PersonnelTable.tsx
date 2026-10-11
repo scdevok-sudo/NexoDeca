@@ -36,7 +36,7 @@ export function PersonnelTable({ rows, canEdit, onDeactivate }: Props) {
       ),
     },
     { header: 'DNI', render: (p) => p.dni },
-    { header: 'Puesto', render: (p) => p.puestoNombre ?? '—' },
+    { header: 'Puesto', render: (p) => p.puestoNombre ?? 'Sin asignar' },
     { header: 'Ingreso', render: (p) => formatDate(p.fechaIngreso) },
     {
       header: 'Estado',

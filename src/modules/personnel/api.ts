@@ -15,7 +15,9 @@ import type { Paginated, UUID } from '../../types/common';
 import type { Person, PersonnelFilters, PersonInput, ImportReport } from './types';
 import { IMPORT_MAX_BYTES, personSchema, personnelFiltersSchema } from './schemas';
 
-const COLUMNS = 'id, dni, nombre, apellido, position_id, fecha_ingreso, activo, created_at, updated_at, positions(nombre)';
+// TODO(M3): cuando exista la tabla positions (y la FK personnel_position_id_fkey), volver a embeber el nombre del puesto:
+//   agregar `, positions(nombre)` a COLUMNS, `positions: { nombre: string } | null` a PersonRow y `puestoNombre: r.positions?.nombre` en toPerson.
+const COLUMNS = 'id, dni, nombre, apellido, position_id, fecha_ingreso, activo, created_at, updated_at';
 
 interface PersonRow {
   id: string;
@@ -27,7 +29,6 @@ interface PersonRow {
   activo: boolean;
   created_at: string;
   updated_at: string;
-  positions: { nombre: string } | null;
 }
 
 const ERRORS = {
@@ -45,7 +46,6 @@ function toPerson(r: PersonRow): Person {
     nombre: r.nombre,
     apellido: r.apellido,
     puestoId: r.position_id,
-    puestoNombre: r.positions?.nombre,
     fechaIngreso: r.fecha_ingreso,
     activo: r.activo,
     createdAt: r.created_at,

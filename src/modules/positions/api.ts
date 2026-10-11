@@ -20,11 +20,13 @@ import type { Position, PositionInput } from './types';
  * (Implementado desde M2: el formulario de Personal lo necesita para el selector de puesto.)
  */
 export async function listPositions(opts?: { incluirInactivos?: boolean }): Promise<Position[]> {
-  let query = supabase.from('positions').select('id, nombre, descripcion, activo').order('nombre');
+  // TODO(M3): la tabla positions es mínima (0011): todavía no tiene `descripcion`. Cuando la tenga, sumarla acá
+  //   al select y sacar el `descripcion: ''` del map.
+  let query = supabase.from('positions').select('id, nombre, activo').order('nombre');
   if (!opts?.incluirInactivos) query = query.eq('activo', true);
   const { data, error } = await query;
   if (error) throw fromPostgrestError(error);
-  return (data ?? []) as Position[];
+  return (data ?? []).map((p) => ({ id: p.id, nombre: p.nombre, descripcion: '', activo: p.activo }));
 }
 
 /**
