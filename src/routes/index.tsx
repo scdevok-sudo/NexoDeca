@@ -2,7 +2,7 @@
  * routes/index.tsx — Definición central de rutas y guards por rol.
  * Módulo: Setup / M1 (guards) — cada ruta apunta a la página de su módulo.
  *
- * TODO(M1): revisar los guards cuando esté lista la autenticación real.
+ * Guards revisados con la autenticación real (M1): /trainers solo gerente, /trainings/new solo capacitador.
  * PERMISOS: el guard solo mejora la UX; la seguridad real está en RLS / Edge Functions.
  */
 

@@ -5,9 +5,9 @@
  * TODO(SETUP): usar forwardRef/ref como prop para integrarlo con react-hook-form (register).
  */
 
-import type { InputHTMLAttributes } from 'react';
+import type { ComponentProps } from 'react';
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends ComponentProps<'input'> {
   label?: string;
   error?: string;
 }

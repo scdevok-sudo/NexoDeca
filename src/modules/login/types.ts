@@ -25,6 +25,7 @@ export interface LoginInput {
 export interface CreateTrainerInput {
   email: string;
   nombre: string;
-  // TODO(M1): password inicial vs. link de invitación. TODO(consultar a Santi): la spec no define el flujo.
+  // Contraseña inicial que define el Gerente (no hay mails automáticos en Fase 1).
+  // Forzar cambio?
   password: string;
 }
