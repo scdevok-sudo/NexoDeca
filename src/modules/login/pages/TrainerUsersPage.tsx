@@ -2,23 +2,21 @@
  * pages/TrainerUsersPage.tsx — Alta de cuentas de Capacitador.
  * Módulo: M1 · Login y sesiones (spec §1)
  *
- * Qué tiene que hacer:
- *  - TODO(consultar a Santi): la spec no define esta pantalla; es el mínimo para cumplir "el Gerente crea cuentas".
- *  - Ruta: /trainers · roles: gerente
+ * - Ruta: /trainers · roles: gerente
+ * PERMISOS: gerente (guard en routes/index.tsx; la verificación real está en la Edge Function create-trainer-user).
+ * TODO(consultar a Santi): la spec no define esta pantalla; es el mínimo para cumplir "el Gerente crea cuentas".
  */
 
-import { Placeholder } from '../../../components/ui/Placeholder';
+import { CreateTrainerForm } from '../components/CreateTrainerForm';
 
-// PERMISOS: gerente (el guard está en routes/index.tsx; la verificación real es de RLS / Edge Functions).
-// TODO(consultar a Santi): la spec no define esta pantalla; es el mínimo para cumplir "el Gerente crea cuentas".
 export function TrainerUsersPage() {
   return (
-    <Placeholder
-      code="M1"
-      module="Login y sesiones"
-      title="TrainerUsersPage"
-      route="/trainers"
-      roles="gerente"
-    />
+    <section className="space-y-4">
+      <h1 className="text-xl font-semibold text-slate-900">Capacitadores</h1>
+      <div className="rounded-lg border border-slate-200 bg-white p-4">
+        <h2 className="mb-3 font-medium text-slate-800">Nueva cuenta</h2>
+        <CreateTrainerForm />
+      </div>
+    </section>
   );
 }

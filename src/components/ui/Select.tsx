@@ -5,14 +5,14 @@
  * TODO(SETUP): versión multi-select (la necesita M4 para los puestos de un tema).
  */
 
-import type { SelectHTMLAttributes } from 'react';
+import type { ComponentProps } from 'react';
 
 export interface SelectOption {
   value: string;
   label: string;
 }
 
-interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
+interface Props extends ComponentProps<'select'> {
   label?: string;
   error?: string;
   options: SelectOption[];
