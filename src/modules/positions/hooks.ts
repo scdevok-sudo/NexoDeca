@@ -7,10 +7,9 @@
  *  - Las GET son useQuery; el resto useMutation.
  */
 
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { listPositions, createPosition, updatePosition, deletePosition } from './api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { listPositions, createPosition, updatePosition, deletePosition, countActivePersonnel } from './api';
 
-// TODO(M3): invalidar/actualizar el cache de react-query donde corresponda.
 export function useListPositions(...args: Parameters<typeof listPositions>) {
   return useQuery({
     queryKey: ['positions', 'listPositions', ...args],
@@ -18,23 +17,43 @@ export function useListPositions(...args: Parameters<typeof listPositions>) {
   });
 }
 
-// TODO(M3): invalidar/actualizar el cache de react-query donde corresponda.
+export function useCountActivePersonnel(...args: Parameters<typeof countActivePersonnel>) {
+  return useQuery({
+    queryKey: ['positions', 'countActivePersonnel', ...args],
+    queryFn: () => countActivePersonnel(...args),
+    enabled: Boolean(args[0]),
+  });
+}
+
+function useInvalidatePositions() {
+  const qc = useQueryClient();
+  return () =>
+    Promise.all([
+      qc.invalidateQueries({ queryKey: ['positions'] }),
+      qc.invalidateQueries({ queryKey: ['personnel'] }),
+    ]);
+}
+
 export function useCreatePosition() {
+  const invalidate = useInvalidatePositions();
   return useMutation({
     mutationFn: (args: Parameters<typeof createPosition>) => createPosition(...args),
+    onSuccess: invalidate,
   });
 }
 
-// TODO(M3): invalidar/actualizar el cache de react-query donde corresponda.
 export function useUpdatePosition() {
+  const invalidate = useInvalidatePositions();
   return useMutation({
     mutationFn: (args: Parameters<typeof updatePosition>) => updatePosition(...args),
+    onSuccess: invalidate,
   });
 }
 
-// TODO(M3): invalidar/actualizar el cache de react-query donde corresponda.
 export function useDeletePosition() {
+  const invalidate = useInvalidatePositions();
   return useMutation({
     mutationFn: (args: Parameters<typeof deletePosition>) => deletePosition(...args),
+    onSuccess: invalidate,
   });
 }
