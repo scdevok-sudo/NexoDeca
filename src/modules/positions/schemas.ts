@@ -7,12 +7,23 @@
  */
 
 import { z } from 'zod';
+const normalize = (s: string) => s.trim().replace(/\s+/g, ' ');
 
 export const positionSchema = z.object({
-  // REGLA DE NEGOCIO: nombre único (lo garantiza un UNIQUE en la base; el 409 lo mapeamos en api.ts).
-  nombre: z.string().min(1),
-  descripcion: z.string(),
+  // REGLA DE NEGOCIO: nombre único (UNIQUE sobre lower(btrim(nombre)); el 409 se mapea en api.ts).
+  nombre: z
+    .string()
+    .transform(normalize)
+    .pipe(
+      z
+        .string()
+        .min(1, 'Ingresá el nombre del puesto')
+        .max(80, 'Máximo 80 caracteres')
+        // Evita inyección de fórmulas cuando el puesto se exporta a Excel (reporte M9).
+        .refine((s) => !/^[=+\-@]/.test(s), 'No puede empezar con =, +, - ni @'),
+    ),
+  descripcion: z.string().transform((s) => s.trim()).pipe(z.string().max(500, 'Máximo 500 caracteres')),
   activo: z.boolean(),
 });
 
-export type PositionFormValues = z.infer<typeof positionSchema>;
+export type PositionFormValues = z.input<typeof positionSchema>;

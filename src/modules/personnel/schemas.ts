@@ -64,9 +64,11 @@ export const importRowSchema = personSchema.extend({
 /** Filtros de GET /personnel. Un valor inválido es un 400, no se ignora en silencio. */
 export const personnelFiltersSchema = z.object({
   // Prefijo de DNI: solo dígitos, así no se cuelan comodines de LIKE (% _).
-  dni: z
-    .string()
-    .regex(/^\d{1,8}$/, 'El DNI son hasta 8 dígitos')
+     // Se aceptan puntos y espacios ("30.123") como en el alta; se normalizan antes de validar.
+     dni: z
+       .string()
+       .transform((s) => s.trim().replace(/[.\s]/g, ''))
+       .pipe(z.string().regex(/^\d{1,8}$/, 'El DNI son hasta 8 dígitos'))
     .optional(),
   q: z.string().max(100, 'Máximo 100 caracteres').optional(),
   puestoId: z.uuid('Puesto inválido').optional(),
