@@ -1,5 +1,5 @@
 /**
- * hooks.ts — Hooks de react-query sobre api.ts (stubs).
+ * hooks.ts — Hooks de react-query sobre api.ts.
  * Módulo: M6 · Dictado y Asistencia (spec §6)
  *
  * Qué tiene que hacer:
@@ -7,42 +7,86 @@
  *  - Las GET son useQuery; el resto useMutation.
  */
 
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { listTrainings, getTraining, createTraining, updateTraining, voidTraining } from './api';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  listTrainings,
+  getTraining,
+  createTraining,
+  updateTraining,
+  voidTraining,
+  listTopicOptions,
+  searchPersonnel,
+  listTrainers,
+} from './api';
 
-// TODO(M6): invalidar/actualizar el cache de react-query donde corresponda.
+const KEY = ['trainings'] as const;
+
 export function useListTrainings(...args: Parameters<typeof listTrainings>) {
   return useQuery({
-    queryKey: ['trainings', 'listTrainings', ...args],
+    queryKey: [...KEY, 'listTrainings', ...args],
     queryFn: () => listTrainings(...args),
+    // Mantiene la página anterior visible mientras carga la siguiente.
+    placeholderData: keepPreviousData,
   });
 }
 
-// TODO(M6): invalidar/actualizar el cache de react-query donde corresponda.
-export function useGetTraining(...args: Parameters<typeof getTraining>) {
+export function useGetTraining(id: string | undefined) {
   return useQuery({
-    queryKey: ['trainings', 'getTraining', ...args],
-    queryFn: () => getTraining(...args),
+    queryKey: [...KEY, 'getTraining', id],
+    queryFn: () => getTraining(id as string),
+    enabled: Boolean(id),
   });
 }
 
-// TODO(M6): invalidar/actualizar el cache de react-query donde corresponda.
+export function useTopicOptions() {
+  return useQuery({
+    // Bajo la clave de temas (M4): si cambia el catálogo, se refresca también acá.
+    queryKey: ['topics', 'trainingTopicOptions'],
+    queryFn: listTopicOptions,
+  });
+}
+
+export function useSearchPersonnel(opts: Parameters<typeof searchPersonnel>[0]) {
+  return useQuery({
+    queryKey: ['personnel', 'searchForTraining', opts],
+    queryFn: () => searchPersonnel(opts),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useTrainers(enabled: boolean) {
+  return useQuery({
+    queryKey: [...KEY, 'trainers'],
+    queryFn: listTrainers,
+    enabled,
+  });
+}
+
+function useInvalidateTrainings() {
+  const qc = useQueryClient();
+  return () => qc.invalidateQueries({ queryKey: KEY });
+}
+
 export function useCreateTraining() {
+  const invalidate = useInvalidateTrainings();
   return useMutation({
     mutationFn: (args: Parameters<typeof createTraining>) => createTraining(...args),
+    onSuccess: invalidate,
   });
 }
 
-// TODO(M6): invalidar/actualizar el cache de react-query donde corresponda.
 export function useUpdateTraining() {
+  const invalidate = useInvalidateTrainings();
   return useMutation({
     mutationFn: (args: Parameters<typeof updateTraining>) => updateTraining(...args),
+    onSuccess: invalidate,
   });
 }
 
-// TODO(M6): invalidar/actualizar el cache de react-query donde corresponda.
 export function useVoidTraining() {
+  const invalidate = useInvalidateTrainings();
   return useMutation({
     mutationFn: (args: Parameters<typeof voidTraining>) => voidTraining(...args),
+    onSuccess: invalidate,
   });
 }

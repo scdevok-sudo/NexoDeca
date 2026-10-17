@@ -2,7 +2,8 @@
  * routes/index.tsx — Definición central de rutas y guards por rol.
  * Módulo: Setup / M1 (guards) — cada ruta apunta a la página de su módulo.
  *
- * Guards revisados con la autenticación real (M1): /trainers solo gerente, /trainings/new solo capacitador.
+ * Guards revisados con la autenticación real (M1): /trainers solo gerente.
+ * /trainings/new y /trainings/:id/edit: gerente y capacitador (M6: el Gerente puede cargar las propias).
  * PERMISOS: el guard solo mejora la UX; la seguridad real está en RLS / Edge Functions.
  */
 
@@ -92,7 +93,15 @@ export function AppRoutes() {
         <Route
           path="/trainings/new"
           element={
-            <RequireRole roles={['capacitador']}>
+            <RequireRole roles={['gerente', 'capacitador']}>
+              <TrainingFormPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/trainings/:id/edit"
+          element={
+            <RequireRole roles={['gerente', 'capacitador']}>
               <TrainingFormPage />
             </RequireRole>
           }

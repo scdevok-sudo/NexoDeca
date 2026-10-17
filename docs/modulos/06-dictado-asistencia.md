@@ -2,7 +2,7 @@
 
 - **Horas estimadas:** 12 h
 - **Perfil sugerido:** Frontend (formularios complejos) + Backend (reglas de negocio cruzadas)
-- **Responsable:** _sin asignar_
+- **Responsable:** Lucas
 - **Fuente:** `docs/especificacion-modulo1-fase1-capacitaciones.md`, sección 6
 
 ## Dependencias

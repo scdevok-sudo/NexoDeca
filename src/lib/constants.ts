@@ -12,8 +12,8 @@ export const ROLES: Record<'GERENTE' | 'CAPACITADOR', Role> = {
 
 export const TOPIC_TYPES = ['obligatorio', 'electivo'] as const;
 export const ATTENDANCE_RESULTS = ['aprobado', 'no_aprobado'] as const;
-// TODO(M6): confirmar los estados de una capacitación (la spec nombra "cerrar" y "anulada").
-export const TRAINING_STATUSES = ['abierta', 'cerrada', 'anulada'] as const;
+// Estados del enum training_status (0014). El "cierre" que dispara los certificados es de M7: TODO(consultar a Santi).
+export const TRAINING_STATUSES = ['activa', 'anulada'] as const;
 
 /** REGLA DE NEGOCIO: paginación del lado del servidor, 25 registros por página (spec §2, §4). */
 export const PAGE_SIZE = 25;

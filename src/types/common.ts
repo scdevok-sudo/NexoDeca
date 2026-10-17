@@ -12,10 +12,10 @@ export type ISODate = string;
 export type Role = 'gerente' | 'capacitador';
 export type TopicType = 'obligatorio' | 'electivo';
 export type AttendanceResult = 'aprobado' | 'no_aprobado';
-// TODO(M6): la spec habla de "cerrar" y de "anulada"; el estado inicial (abierta) es una suposición.
-export type TrainingStatus = 'abierta' | 'cerrada' | 'anulada';
+// Valores del enum training_status (0014). El "cierre" que dispara los certificados es de M7 (TODO(consultar a Santi)).
+export type TrainingStatus = 'activa' | 'anulada';
 /** Si el tema le correspondía a la persona según su puesto (spec §6). */
-export type Applicability = 'obligatorio' | 'electivo' | 'no_corresponde';
+export type Applicability = 'obligatorio' | 'electivo' | 'no_correspondia';
 
 export interface Paginated<T> {
   data: T[];
