@@ -8,16 +8,26 @@
 
 import type { UUID, ISODate } from '../../types/common';
 
+/**
+ * nunca: el tema le corresponde y nunca lo aprobó (decidido con Lucas, 2026-10-17: se muestra).
+ * vencida: ya venció · por_vencer: vence dentro del rango de días.
+ */
+export type ComplianceStatus = 'nunca' | 'vencida' | 'por_vencer';
+
 export interface ComplianceItem {
   personId: UUID;
+  dni: string;
   personaNombre: string;
   puestoNombre: string;
   topicId: UUID;
   temaNombre: string;
-  /** null = nunca tomó el curso. TODO(M8): definir cómo se muestra. */
+  periodicidadMeses: number;
+  /** null = nunca aprobó el curso. */
   ultimoAprobado: ISODate | null;
   venceEl: ISODate | null;
-  estado: 'vencida' | 'por_vencer';
+  estado: ComplianceStatus;
+  /** Negativo si ya venció; null si nunca lo aprobó. */
+  diasRestantes: number | null;
 }
 
 export interface ComplianceFilters {

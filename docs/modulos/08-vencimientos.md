@@ -2,7 +2,7 @@
 
 - **Horas estimadas:** 5 h
 - **Perfil sugerido:** Backend (cálculo de fechas) + Frontend (panel y filtros)
-- **Responsable:** _sin asignar_
+- **Responsable:** Lucas
 - **Fuente:** `docs/especificacion-modulo1-fase1-capacitaciones.md`, sección 8
 
 ## Dependencias
@@ -24,7 +24,7 @@
 - Frontend: `src/modules/compliance/` (`README.md`, `index.ts`, `types.ts`, `schemas.ts`, `api.ts`, `hooks.ts`, `components/`, `pages/`)
   - Páginas: `pages/CompliancePage.tsx`
   - Componentes: `components/ComplianceTable.tsx`, `components/ComplianceFilters.tsx`
-- Edge Function: `supabase/functions/compliance-upcoming/index.ts`
+- Migración: `supabase/migrations/0021_vencimientos.sql` (RPC `compliance_upcoming`; la Edge Function del esqueleto se eliminó)
 - Migración: `supabase/migrations/(usa tablas de 0002, 0003 y 0005; opcionalmente una vista SQL)`
 
 ## Endpoints que implementa
@@ -38,11 +38,11 @@ Gerente y Capacitador acceden al panel completo. No hay vista para el Operario.
 ## Checklist (orden sugerido)
 
 - [ ] Definir el cálculo: último aprobado por (persona, tema) + periodicidad en meses.
-- [ ] Decidir si va en SQL (vista/función) o en la Edge Function compliance-upcoming.
+- [x] Decidido (Lucas, 2026-10-17): función en la base `compliance_upcoming` (0021), sin Edge Function.
 - [ ] Considerar solo personal activo y temas obligatorios activos con periodicidad.
 - [ ] Filtros por puesto, tema y rango de días (default 15).
 - [ ] Panel agrupado por tema, responsive.
-- [ ] Definir cómo se trata a quien nunca tomó el curso (TODO consultar a Santi).
+- [x] Decidido (Lucas, 2026-10-17): quien nunca lo aprobó aparece como "Nunca lo hizo".
 - [ ] Probar permisos: solo Gerente y Capacitador.
 
 ## Criterios de "listo"

@@ -49,7 +49,7 @@ npm run lint
 | M5 Plan Anual | 9 | `src/modules/plan` | — | 0004 | _sin asignar_ | esqueleto |
 | M6 Dictado y Asistencia | 12 | `src/modules/trainings` | — | 0005 | _sin asignar_ | esqueleto |
 | M7 Certificados | 9 | `src/modules/certificates` | `generate-certificates`, `certificates-by-dni` | 0006, 0009 | _sin asignar_ | esqueleto |
-| M8 Vencimientos | 5 | `src/modules/compliance` | `compliance-upcoming` | (usa 0002, 0003, 0005) | _sin asignar_ | esqueleto |
+| M8 Vencimientos | 5 | `src/modules/compliance` | — (RPC `compliance_upcoming`) | 0021 | Lucas | hecho |
 | M9 Reporte mensual YPF | 6 | `src/modules/reports` | `monthly-report` | 0007, 0009 | _sin asignar_ | esqueleto |
 | Testing, ajustes, deploy, buffer | 8 | — | — | — | Santi | pendiente |
 
