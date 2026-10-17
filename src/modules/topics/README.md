@@ -2,7 +2,7 @@
 
 - **Horas estimadas:** 5 h
 - **Perfil sugerido:** Frontend + Backend (CRUD)
-- **Responsable:** _sin asignar_
+- **Responsable:** Lucas
 - **Fuente:** `docs/especificacion-modulo1-fase1-capacitaciones.md`, sección 4
 
 ## Dependencias
