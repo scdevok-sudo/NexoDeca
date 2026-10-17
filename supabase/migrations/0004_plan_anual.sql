@@ -21,7 +21,7 @@
 --   ya dictadas NO borra ni altera trainings / training_attendees (no hay FK desde trainings hacia el plan).
 -- REGLA DE NEGOCIO: solo temas existentes y activos pueden asignarse (400 si no).
 -- TODO(consultar a Santi): qué significa "mes cerrado" (¿mes ya pasado? ¿con capacitaciones dictadas?).
--- TODO(M5): "quién debería tomar cada tema" se calcula (topic_positions x personnel activos); decidir vista SQL vs. cálculo en API.
+-- "Quién debería tomar cada tema" se calcula en el cliente (topic_positions x personnel activos): ver getExpectedAttendees en src/modules/plan/api.ts.
 
 -- RLS esperada (se detalla en 0008):
 --   select: Gerente y Capacitador.

@@ -10,19 +10,40 @@ import type { UUID } from '../../types/common';
 
 export type PlanMonth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
+/** Tema tal como se muestra en el plan (puede haberse desactivado después de planificarlo). */
+export interface PlanTopic {
+  id: UUID;
+  nombre: string;
+  activo: boolean;
+}
+
 export interface PlanMonthEntry {
   mes: PlanMonth;
-  topicIds: UUID[];
+  topics: PlanTopic[];
 }
 
 export interface TrainingPlan {
   year: number;
+  /** Siempre los 12 meses, en orden (un mes sin temas viene con `topics: []`). */
   meses: PlanMonthEntry[];
 }
 
-/** Personas que deberían tomar un tema planificado (según su puesto). */
-export interface ExpectedAttendees {
-  mes: PlanMonth;
-  topicId: UUID;
-  personIds: UUID[];
+/** Lo que se manda al guardar: por cada mes, los ids de sus temas. */
+export interface PlanInput {
+  meses: { mes: PlanMonth; topicIds: UUID[] }[];
+}
+
+export interface CopyPlanResult {
+  plan: TrainingPlan;
+  /** Temas del año de origen que no se copiaron porque hoy están inactivos. */
+  temasOmitidos: string[];
+}
+
+/** Persona que debería tomar un tema planificado (según su puesto actual). */
+export interface ExpectedAttendee {
+  id: UUID;
+  dni: string;
+  nombre: string;
+  apellido: string;
+  puestoNombre: string | null;
 }

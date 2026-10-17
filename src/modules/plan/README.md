@@ -2,7 +2,7 @@
 
 - **Horas estimadas:** 9 h
 - **Perfil sugerido:** Frontend (UI de planificación mensual) + Backend
-- **Responsable:** _sin asignar_
+- **Responsable:** Lucas
 - **Fuente:** `docs/especificacion-modulo1-fase1-capacitaciones.md`, sección 5
 
 ## Dependencias
