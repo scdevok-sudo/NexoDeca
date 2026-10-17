@@ -3,7 +3,8 @@
  * Módulo: M6 · Dictado y Asistencia (spec §6)
  *
  * Qué tiene que hacer:
- *  - Bloquear si ya tiene certificado (y el servidor responde 409).
+ *  - Con certificados también se anula (decidido con Lucas, 2026-10-17; void_training de 0020): avisar que sus
+ *    certificados quedan anulados. Es la forma de corregir una capacitación certificada (y registrar una nueva).
  */
 
 import { useState } from 'react';
@@ -40,17 +41,16 @@ export function VoidTrainingModal({ training, onClose }: Props) {
 
   return (
     <Modal open={Boolean(training)} title="Anular capacitación" onClose={close}>
-      {training?.tieneCertificados ? (
-        // REGLA DE NEGOCIO: con certificados no se anula (el servidor también responde 409).
-        <p className="text-sm text-slate-700">
-          Esta capacitación ya tiene certificados generados y no se puede anular. Si hay un error, corregilo registrando
-          una capacitación nueva.
-        </p>
-      ) : (
-        <p className="text-sm text-slate-700">
-          La capacitación Nro. <strong>{training?.nroRegistro}</strong> ({training?.topicNombre}) va a quedar anulada.
-          No se borra: sigue visible en el historial y su número de registro no se vuelve a usar. Esta acción no se puede
-          deshacer.
+      <p className="text-sm text-slate-700">
+        La capacitación Nro. <strong>{training?.nroRegistro}</strong> ({training?.topicNombre}) va a quedar anulada.
+        No se borra: sigue visible en el historial y su número de registro no se vuelve a usar. Esta acción no se puede
+        deshacer.
+      </p>
+      {training?.tieneCertificados && (
+        <p className="mt-2 rounded border border-amber-300 bg-amber-50 p-2 text-sm text-amber-900">
+          Ya tiene certificados generados: van a quedar <strong>anulados</strong> y dejan de aparecer en la consulta por
+          DNI (los PDF se conservan como histórico). Si había un error, registrá después una capacitación nueva con los
+          datos correctos.
         </p>
       )}
       {error && (
@@ -60,13 +60,11 @@ export function VoidTrainingModal({ training, onClose }: Props) {
       )}
       <div className="mt-4 flex justify-end gap-2">
         <Button variant="secondary" onClick={close}>
-          {training?.tieneCertificados ? 'Cerrar' : 'Cancelar'}
+          Cancelar
         </Button>
-        {!training?.tieneCertificados && (
-          <Button variant="danger" onClick={() => void confirm()} disabled={voidTraining.isPending}>
-            Anular
-          </Button>
-        )}
+        <Button variant="danger" onClick={() => void confirm()} disabled={voidTraining.isPending}>
+          Anular
+        </Button>
       </div>
     </Modal>
   );

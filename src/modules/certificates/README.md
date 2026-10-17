@@ -2,7 +2,7 @@
 
 - **Horas estimadas:** 9 h
 - **Perfil sugerido:** Backend / Edge Functions (generación de PDF)
-- **Responsable:** _sin asignar_
+- **Responsable:** Lucas
 - **Fuente:** `docs/especificacion-modulo1-fase1-capacitaciones.md`, sección 7
 
 ## Dependencias

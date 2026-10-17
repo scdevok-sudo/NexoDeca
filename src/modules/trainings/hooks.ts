@@ -84,9 +84,11 @@ export function useUpdateTraining() {
 }
 
 export function useVoidTraining() {
-  const invalidate = useInvalidateTrainings();
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (args: Parameters<typeof voidTraining>) => voidTraining(...args),
-    onSuccess: invalidate,
+    // Anular también deja sus certificados en 'anulado' (M7).
+    onSuccess: () =>
+      Promise.all([qc.invalidateQueries({ queryKey: KEY }), qc.invalidateQueries({ queryKey: ['certificates'] })]),
   });
 }

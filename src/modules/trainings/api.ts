@@ -213,7 +213,9 @@ export async function updateTraining(id: UUID, input: TrainingInput): Promise<Tr
  * POST /trainings/{id}/void
  * PERMISOS: Capacitador (la propia) o Gerente (cualquiera) — RPC void_training, 0019.
  * REGLA DE NEGOCIO: Nunca se borra físicamente; el nro de registro queda anulado y no se reutiliza.
- * Errores: 404; 409 si ya tiene certificados (corregir con una capacitación nueva) o ya está anulada.
+ * REGLA DE NEGOCIO (decidido con Lucas, 2026-10-17; void_training de 0020): con certificados también se anula, y
+ *   sus certificados pasan a 'anulado'. Así se corrige una capacitación certificada (después se registra una nueva).
+ * Errores: 404; 409 si ya está anulada.
  */
 export async function voidTraining(id: UUID): Promise<void> {
   const { error } = await supabase.rpc('void_training', { p_id: id });

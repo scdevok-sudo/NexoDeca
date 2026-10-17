@@ -20,4 +20,4 @@
 
 -- TODO(SETUP): insert into storage.buckets (id, name, public) values ('certificates', 'certificates', false), ('reports', 'reports', false);
 -- TODO(SETUP): policies sobre storage.objects según lo anterior.
--- TODO(M7): definir tamaño máximo y content-type permitido (application/pdf).
+-- Tamaño máximo (1 MB) y content-type (application/pdf) del bucket certificados-pdf: ver 0020 (M7).

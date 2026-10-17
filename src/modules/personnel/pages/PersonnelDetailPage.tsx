@@ -84,8 +84,7 @@ export function PersonnelDetailPage() {
 
       <div className="rounded-lg border border-slate-200 bg-white p-4">
         <h2 className="mb-3 font-medium text-slate-800">Certificados</h2>
-        {/* TODO(M7): pasarle personId={p.id} cuando el componente reciba la prop. */}
-        <PersonCertificatesPanel />
+        <PersonCertificatesPanel personId={p.id} />
       </div>
     </section>
   );
