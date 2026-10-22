@@ -8,13 +8,27 @@
 
 import type { UUID } from '../../types/common';
 
+/** Un reporte del historial (tabla monthly_reports, 0022). */
 export interface MonthlyReport {
   id: UUID;
   year: number;
   month: number;
+  /** Generar el mismo mes otra vez crea una versión nueva; la anterior queda. */
+  version: number;
+  /** Excel, según docs/decisiones-tecnicas.md. */
+  formato: 'xlsx';
   generadoEl: string;
-  /** Formato a definir con Juan: PDF o Excel. */
-  formato: 'pdf' | 'xlsx';
+  generadoPor: string | null;
+  cantidadCapacitaciones: number;
+  cantidadParticipantes: number;
+}
+
+/** Lo que devuelve generar un reporte: el registro + la URL firmada para descargarlo ya. */
+export interface GeneratedReport {
+  id: UUID;
+  year: number;
+  month: number;
+  version: number;
   downloadUrl: string;
 }
 

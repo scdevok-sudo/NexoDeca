@@ -18,7 +18,7 @@
 -- REGLA DE NEGOCIO: el reporte generado se guarda como archivo histórico (no se regenera al vuelo) para poder
 --   reconstruir exactamente lo que se le entregó a YPF.
 -- REGLA DE NEGOCIO: puede generarse con el mes en curso incompleto.
--- TODO(consultar a Santi): ¿las capacitaciones anuladas figuran en el reporte?
+-- Decidido (Lucas, 2026-10-17): las anuladas figuran en "Capacitaciones" marcadas como Anulada, sin nómina. La tabla real está en 0022.
 
 -- RLS esperada (se detalla en 0008):
 --   select: Gerente y Capacitador.

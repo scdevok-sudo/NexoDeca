@@ -50,7 +50,7 @@ npm run lint
 | M6 Dictado y Asistencia | 12 | `src/modules/trainings` | — | 0005 | _sin asignar_ | esqueleto |
 | M7 Certificados | 9 | `src/modules/certificates` | `generate-certificates`, `certificates-by-dni` | 0006, 0009 | _sin asignar_ | esqueleto |
 | M8 Vencimientos | 5 | `src/modules/compliance` | — (RPC `compliance_upcoming`) | 0021 | Lucas | hecho |
-| M9 Reporte mensual YPF | 6 | `src/modules/reports` | `monthly-report` | 0007, 0009 | _sin asignar_ | esqueleto |
+| M9 Reporte mensual YPF | 6 | `src/modules/reports` | `monthly-report`, `report-download` | 0022 | Lucas | hecho (falta desplegar las Edge Functions) |
 | Testing, ajustes, deploy, buffer | 8 | — | — | — | Santi | pendiente |
 
 Cada módulo tiene su ficha en `docs/modulos/` (y una copia en el `README.md` de su carpeta). Anotá tu nombre ahí cuando tomes uno.

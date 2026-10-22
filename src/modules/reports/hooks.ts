@@ -1,5 +1,5 @@
 /**
- * hooks.ts — Hooks de react-query sobre api.ts (stubs).
+ * hooks.ts — Hooks de react-query sobre api.ts.
  * Módulo: M9 · Reporte mensual YPF (spec §9)
  *
  * Qué tiene que hacer:
@@ -7,20 +7,36 @@
  *  - Las GET son useQuery; el resto useMutation.
  */
 
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { generateMonthlyReport, listMonthlyReports } from './api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { generateMonthlyReport, listMonthlyReports, getReportDownloadUrl } from './api';
 
-// TODO(M9): invalidar/actualizar el cache de react-query donde corresponda.
-export function useGenerateMonthlyReport() {
-  return useMutation({
-    mutationFn: (args: Parameters<typeof generateMonthlyReport>) => generateMonthlyReport(...args),
+const KEY = ['reports'] as const;
+
+export function useListMonthlyReports() {
+  return useQuery({
+    queryKey: [...KEY, 'listMonthlyReports'],
+    queryFn: listMonthlyReports,
   });
 }
 
-// TODO(M9): invalidar/actualizar el cache de react-query donde corresponda.
-export function useListMonthlyReports(...args: Parameters<typeof listMonthlyReports>) {
-  return useQuery({
-    queryKey: ['reports', 'listMonthlyReports', ...args],
-    queryFn: () => listMonthlyReports(...args),
+/** Genera el reporte, lo descarga y refresca el historial (aparece la versión nueva). */
+export function useGenerateMonthlyReport() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (args: Parameters<typeof generateMonthlyReport>) => {
+      const report = await generateMonthlyReport(...args);
+      window.location.assign(report.downloadUrl);
+      return report;
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
+/** Pide la URL firmada y navega a ella: el Excel se descarga como adjunto, sin salir de la pantalla. */
+export function useDownloadReport() {
+  return useMutation({
+    mutationFn: async (id: string) => {
+      window.location.assign(await getReportDownloadUrl(id));
+    },
   });
 }

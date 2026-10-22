@@ -2,7 +2,7 @@
 
 - **Horas estimadas:** 6 h
 - **Perfil sugerido:** Backend (agregación de datos y export a PDF/Excel)
-- **Responsable:** _sin asignar_
+- **Responsable:** Lucas
 - **Fuente:** `docs/especificacion-modulo1-fase1-capacitaciones.md`, sección 9
 
 ## Dependencias
@@ -26,8 +26,8 @@
   - Páginas: `pages/ReportsPage.tsx`
   - Componentes: `components/MonthYearPicker.tsx`, `components/ReportsHistoryList.tsx`
 - Edge Function: `supabase/functions/monthly-report/index.ts`
-- Migración: `supabase/migrations/0007_reportes.sql`
-- Migración: `supabase/migrations/0009_storage_buckets.sql`
+- Migración: `supabase/migrations/0022_monthly_reports.sql` (tabla real; 0007 era solo el diseño comentado)
+- Edge Function: `supabase/functions/report-download/index.ts` (descarga del historial)
 - Migración: `supabase/migrations/0008_rls_policies.sql`
 
 ## Endpoints que implementa
@@ -44,12 +44,12 @@ La spec deja abierto si el reporte para YPF se entrega en **PDF o Excel** ("a de
 
 ## Checklist (orden sugerido)
 
-- [ ] Confirmar con Juan PDF vs. Excel y dejarlo en docs/decisiones-pendientes.md.
-- [ ] Migración 0007 y bucket privado de reportes (0009).
-- [ ] Edge Function monthly-report: agregar datos del mes, generar el archivo y guardarlo en Storage.
-- [ ] Decidir qué pasa si se genera dos veces el mismo mes (nueva versión, conservar la anterior).
-- [ ] Selector de mes/año y listado de reportes anteriores.
-- [ ] Decidir si se incluyen las capacitaciones anuladas (TODO consultar a Santi).
+- [x] Excel (.xlsx con exceljs), según docs/decisiones-tecnicas.md. Falta que Juan lo confirme.
+- [x] Migración 0022 (monthly_reports) y bucket privado reportes-mensuales (0016).
+- [x] Edge Function monthly-report: agrega los datos del mes, genera el Excel y lo guarda en Storage.
+- [x] Decidido (Lucas, 2026-10-17): versión nueva, la anterior queda.
+- [x] Selector de mes/año y listado de reportes anteriores.
+- [x] Decidido (Lucas, 2026-10-17): figuran marcadas como Anulada, sin nómina.
 - [ ] Probar permisos y descarga.
 
 ## Criterios de "listo"
