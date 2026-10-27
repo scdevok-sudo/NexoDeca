@@ -48,3 +48,25 @@ export interface PublicLookupResult {
   // REGLA DE NEGOCIO: misma respuesta exista o no el DNI, para no confirmar ni negar existencia.
   certificados: PublicCertificateItem[];
 }
+
+/** Resultado de verificar un certificado por id (QR del PDF). Datos mínimos: sin DNI ni PDF. */
+export type VerifyStatus = 'vigente' | 'vencido' | 'anulado';
+
+export interface CertificateVerification {
+  nombreCompleto: string;
+  temaNombre: string;
+  fecha: ISODate;
+  nroRegistro: number;
+  /** null si el tema no vence. */
+  venceEl: ISODate | null;
+  estado: VerifyStatus;
+}
+
+/** Firma del Responsable de Seguridad e Higiene (fila única; solo la ve el Gerente). */
+export interface SignatureSettings {
+  nombre: string;
+  cargo: string;
+  matricula: string;
+  /** Ruta de la imagen en el bucket firmas-certificados, si hay. */
+  firmaPath: string | null;
+}

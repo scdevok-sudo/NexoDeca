@@ -14,8 +14,15 @@
 import { supabase } from '../../lib/supabase';
 import { ApiError, fromFunctionsError, fromPostgrestError } from '../../lib/apiError';
 import type { UUID } from '../../types/common';
-import type { Certificate, CertificateStatus, PublicLookupResult, TrainingCertificate } from './types';
-import { dniLookupSchema } from './schemas';
+import type {
+  Certificate,
+  CertificateStatus,
+  CertificateVerification,
+  PublicLookupResult,
+  SignatureSettings,
+  TrainingCertificate,
+} from './types';
+import { dniLookupSchema, signatureSettingsSchema, type SignatureSettingsFormValues } from './schemas';
 
 const ERRORS = {
   '42501': 'No tenés permiso para ver certificados',
@@ -129,4 +136,75 @@ export async function generateCertificates(trainingId: UUID): Promise<{ generado
   });
   if (error) throw await fromFunctionsError(error);
   return { generados: data?.generados ?? 0 };
+}
+
+/**
+ * Verificación pública de un certificado por id → Edge Function certificate-verify (la abre el QR del PDF).
+ * PERMISOS: público (sin login). Devuelve datos mínimos; nunca DNI ni el PDF.
+ * Devuelve null si no existe (la función responde 404 igual para un id inexistente o mal formado).
+ */
+export async function verifyCertificate(id: string): Promise<CertificateVerification | null> {
+  const { data, error } = await supabase.functions.invoke<CertificateVerification>('certificate-verify', { body: { id } });
+  if (error) {
+    const apiError = await fromFunctionsError(error);
+    if (apiError.status === 404) return null;
+    throw apiError;
+  }
+  return data ?? null;
+}
+
+const SIGNATURE_BUCKET = 'firmas-certificados';
+const SIGNATURE_PATH = 'firma-responsable.png';
+const SIGNATURE_MAX_BYTES = 512 * 1024;
+
+/**
+ * Firma del Responsable de Seg. e Higiene (fila única id = 1).
+ * PERMISOS: solo Gerente (RLS cert_signature_*, 0024). Devuelve vacío si todavía no se cargó nada.
+ */
+export async function getSignatureSettings(): Promise<SignatureSettings> {
+  const { data, error } = await supabase
+    .from('certificate_signature_settings')
+    .select('responsable_nombre, responsable_cargo, responsable_matricula, responsable_firma_path')
+    .eq('id', 1)
+    .maybeSingle();
+  if (error) throw fromPostgrestError(error, ERRORS);
+  return {
+    nombre: data?.responsable_nombre ?? '',
+    cargo: data?.responsable_cargo ?? '',
+    matricula: data?.responsable_matricula ?? '',
+    firmaPath: data?.responsable_firma_path ?? null,
+  };
+}
+
+/**
+ * Guarda nombre/cargo/matrícula y, si viene, reemplaza la imagen de la firma (PNG, máx. 512 KB).
+ * PERMISOS: solo Gerente (RLS + policies del bucket).
+ * REGLA DE NEGOCIO: la firma es configuración, se puede reemplazar. Los PDF ya emitidos no cambian.
+ */
+export async function saveSignatureSettings(values: SignatureSettingsFormValues, file?: File | null): Promise<void> {
+  const parsed = signatureSettingsSchema.safeParse(values);
+  if (!parsed.success) throw new ApiError(400, parsed.error.issues[0]?.message ?? 'Datos inválidos');
+
+  let firmaPath: string | undefined;
+  if (file) {
+    if (file.type !== 'image/png') throw new ApiError(400, 'La firma tiene que ser una imagen PNG');
+    if (file.size > SIGNATURE_MAX_BYTES) throw new ApiError(400, 'La imagen pesa más de 512 KB');
+    const { error: upError } = await supabase.storage
+      .from(SIGNATURE_BUCKET)
+      .upload(SIGNATURE_PATH, file, { contentType: 'image/png', upsert: true });
+    if (upError) throw new ApiError(500, 'No se pudo subir la imagen de la firma');
+    firmaPath = SIGNATURE_PATH;
+  }
+
+  const { data: auth } = await supabase.auth.getUser();
+  const { error } = await supabase.from('certificate_signature_settings').upsert({
+    id: 1,
+    responsable_nombre: parsed.data.nombre || null,
+    responsable_cargo: parsed.data.cargo || null,
+    responsable_matricula: parsed.data.matricula || null,
+    ...(firmaPath ? { responsable_firma_path: firmaPath } : {}),
+    updated_at: new Date().toISOString(),
+    updated_by: auth.user?.id ?? null,
+  });
+  if (error) throw fromPostgrestError(error, ERRORS);
 }

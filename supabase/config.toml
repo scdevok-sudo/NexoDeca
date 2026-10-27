@@ -25,3 +25,7 @@ enabled = true
 # PERMISOS: la función igual valida DNI exacto y no devuelve listados (M7).
 [functions.certificates-by-dni]
 verify_jwt = false
+
+# Verificación pública de un certificado por id (QR del PDF). Devuelve datos mínimos, sin DNI ni PDF.
+[functions.certificate-verify]
+verify_jwt = false

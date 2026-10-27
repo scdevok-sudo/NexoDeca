@@ -11,3 +11,5 @@ export { DniLookupForm } from './components/DniLookupForm';
 export { CertificateList } from './components/CertificateList';
 export { PersonCertificatesPanel } from './components/PersonCertificatesPanel';
 export { PublicLookupPage } from './pages/PublicLookupPage';
+export { CertificateVerifyPage } from './pages/CertificateVerifyPage';
+export { SignatureSettingsPage } from './pages/SignatureSettingsPage';

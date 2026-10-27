@@ -21,5 +21,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Plan anual', to: '/plan', roles: ['gerente', 'capacitador'] },
   { label: 'Capacitaciones', to: '/trainings', roles: ['gerente', 'capacitador'] },
   { label: 'Vencimientos', to: '/compliance', roles: ['gerente', 'capacitador'] },
+  { label: 'Firma certificados', to: '/certificate-signature', roles: ['gerente'] },
   { label: 'Reporte YPF', to: '/reports', roles: ['gerente', 'capacitador'] },
 ];

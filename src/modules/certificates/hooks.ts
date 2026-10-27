@@ -14,7 +14,11 @@ import {
   listTrainingCertificates,
   getCertificateDownloadUrl,
   generateCertificates,
+  verifyCertificate,
+  getSignatureSettings,
+  saveSignatureSettings,
 } from './api';
+import type { SignatureSettingsFormValues } from './schemas';
 
 const KEY = ['certificates'] as const;
 
@@ -57,5 +61,28 @@ export function useGenerateCertificates() {
     mutationFn: (trainingId: string) => generateCertificates(trainingId),
     // Cambia la capacitación (queda cerrada) y aparecen certificados nuevos.
     onSettled: () => Promise.all([qc.invalidateQueries({ queryKey: KEY }), qc.invalidateQueries({ queryKey: ['trainings'] })]),
+  });
+}
+
+/** Verificación pública por id (la página a la que lleva el QR). */
+export function useVerifyCertificate(id: string) {
+  return useQuery({
+    queryKey: [...KEY, 'verify', id],
+    queryFn: () => verifyCertificate(id),
+    enabled: Boolean(id),
+    retry: false,
+  });
+}
+
+export function useSignatureSettings() {
+  return useQuery({ queryKey: [...KEY, 'signature'], queryFn: getSignatureSettings });
+}
+
+export function useSaveSignatureSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ values, file }: { values: SignatureSettingsFormValues; file?: File | null }) =>
+      saveSignatureSettings(values, file),
+    onSuccess: () => qc.invalidateQueries({ queryKey: [...KEY, 'signature'] }),
   });
 }

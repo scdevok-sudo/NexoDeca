@@ -17,7 +17,7 @@ import { PositionsPage } from '../modules/positions';
 import { TopicsPage } from '../modules/topics';
 import { PlanPage } from '../modules/plan';
 import { TrainingsListPage, TrainingFormPage, TrainingDetailPage } from '../modules/trainings';
-import { PublicLookupPage } from '../modules/certificates';
+import { CertificateVerifyPage, PublicLookupPage, SignatureSettingsPage } from '../modules/certificates';
 import { CompliancePage } from '../modules/compliance';
 import { ReportsPage } from '../modules/reports';
 
@@ -26,6 +26,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/consulta" element={<PublicLookupPage />} />
+      <Route path="/certificado/:id" element={<CertificateVerifyPage />} />
       <Route
         element={
           <RequireRole roles={['gerente', 'capacitador']}>
@@ -119,6 +120,14 @@ export function AppRoutes() {
           element={
             <RequireRole roles={['gerente', 'capacitador']}>
               <CompliancePage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/certificate-signature"
+          element={
+            <RequireRole roles={['gerente']}>
+              <SignatureSettingsPage />
             </RequireRole>
           }
         />

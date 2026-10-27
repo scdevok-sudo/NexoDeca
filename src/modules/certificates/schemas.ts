@@ -19,3 +19,11 @@ export const dniLookupSchema = z.object({
 });
 
 export type DniLookupValues = z.infer<typeof dniLookupSchema>;
+
+/** Firma del Responsable de Seg. e Higiene. Todo opcional: sin nombre, el certificado deja la línea en blanco. */
+export const signatureSettingsSchema = z.object({
+  nombre: z.string().trim().max(120, 'Máximo 120 caracteres'),
+  cargo: z.string().trim().max(120, 'Máximo 120 caracteres'),
+  matricula: z.string().trim().max(60, 'Máximo 60 caracteres'),
+});
+export type SignatureSettingsFormValues = z.infer<typeof signatureSettingsSchema>;
