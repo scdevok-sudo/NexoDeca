@@ -34,6 +34,7 @@ import { HttpError, badRequest, conflict, errorToResponse, jsonResponse, notFoun
 import { log } from '../_shared/logger.ts';
 import { readJsonLimited } from '../_shared/body.ts';
 import { adminClient } from '../_shared/supabase.ts';
+import { logoDecaPng } from './logo-base64.ts';
 
 const FN = 'generate-certificates';
 const BUCKET = 'certificados-pdf';
@@ -269,12 +270,15 @@ async function buildPdf(c: CertData, shared: Shared): Promise<Uint8Array> {
   return await doc.save();
 }
 
-/** Lee el logo del bundle; si no está (o no viajó con el deploy) devuelve null y el PDF usa texto. */
-async function loadLogo(): Promise<Uint8Array | null> {
+/**
+ * Logo embebido como base64 (logo-base64.ts): un PNG leído con Deno.readFile no viaja con el deploy.
+ * Si por algún motivo no se puede decodificar, devuelve null y el PDF usa el encabezado de texto.
+ */
+function loadLogo(): Uint8Array | null {
   try {
-    return await Deno.readFile(new URL('./assets/deca.png', import.meta.url));
+    return logoDecaPng();
   } catch (e) {
-    log(FN, 'warn', 'no se pudo leer assets/deca.png', { error: String(e) });
+    log(FN, 'warn', 'no se pudo decodificar el logo embebido', { error: String(e) });
     return null;
   }
 }
@@ -331,7 +335,7 @@ Deno.serve(async (req) => {
     const publicAppUrl = (Deno.env.get('PUBLIC_APP_URL') ?? '').trim().replace(/\/+$/, '') || null;
     if (!publicAppUrl) log(FN, 'warn', 'Falta PUBLIC_APP_URL: los certificados salen sin QR');
     const shared: Shared = {
-      logo: await loadLogo(),
+      logo: loadLogo(),
       signature: await loadSignature(admin),
       publicAppUrl,
       cuit: Deno.env.get('EMPRESA_CUIT')?.trim() || null,
