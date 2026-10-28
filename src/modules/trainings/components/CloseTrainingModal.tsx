@@ -43,10 +43,10 @@ export function CloseTrainingModal({ training, onClose }: Props) {
     <Modal open={Boolean(training)} title="Cerrar y generar certificados" onClose={close}>
       <div className="space-y-2 text-sm text-slate-700">
         <p>
-          Se va a generar {aprobados === 1 ? '1 certificado' : `${aprobados} certificados`} en PDF, uno por cada asistente
-          aprobado de la capacitación Nro. <strong>{training?.nroRegistro}</strong>.
+          Se va a generar {aprobados === 1 ? '1 certificado' : `${aprobados} certificados`} en PDF, uno por cada
+          asistente aprobado de la capacitación Nro. <strong>{training?.nroRegistro}</strong>.
         </p>
-        <p className="rounded border border-amber-300 bg-amber-50 p-2 text-amber-900">
+        <p className="rounded-md border border-amber-300 bg-amber-50 p-2 text-amber-900">
           Después de cerrarla <strong>no se va a poder editar</strong>. Revisá antes los asistentes y sus resultados.
         </p>
       </div>
@@ -59,7 +59,7 @@ export function CloseTrainingModal({ training, onClose }: Props) {
         <Button variant="secondary" onClick={close} disabled={generate.isPending}>
           Cancelar
         </Button>
-        <Button onClick={() => void confirm()} disabled={generate.isPending}>
+        <Button onClick={() => void confirm()} loading={generate.isPending}>
           {generate.isPending ? 'Generando…' : 'Cerrar y generar'}
         </Button>
       </div>

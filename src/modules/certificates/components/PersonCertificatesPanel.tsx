@@ -30,8 +30,8 @@ export function PersonCertificatesPanel({ personId }: { personId: string }) {
     }
   };
 
-  if (list.isLoading) return <EmptyState title="Cargando…" />;
-  if (list.isError) return <EmptyState title="No se pudieron cargar los certificados" description={errorMessage(list.error)} />;
+  if (list.isLoading) return <EmptyState tone="loading" title="Cargando…" />;
+  if (list.isError) return <EmptyState tone="error" title="No se pudieron cargar los certificados" description={errorMessage(list.error)} />;
 
   return (
     <div className="space-y-2">

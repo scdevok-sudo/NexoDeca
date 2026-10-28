@@ -46,5 +46,5 @@ export function PositionsTable({ rows, canEdit, onEdit, onDeactivate }: Props) {
     });
   }
 
-  return <Table columns={columns} rows={rows} rowKey={(p) => p.id} emptyText="No hay puestos cargados" />;
+  return <Table columns={columns} rows={rows} rowKey={(p) => p.id} emptyText="Todavía no hay puestos cargados" />;
 }

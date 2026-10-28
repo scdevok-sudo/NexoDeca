@@ -42,11 +42,11 @@ const ESTADOS: Record<CertificateStatus, { label: string; tone: 'success' | 'neu
   anulado: { label: 'Anulado', tone: 'danger' },
 };
 
-export function CertificateList({ items, onDownload, downloadingId, emptyText = 'No hay certificados' }: Props) {
+export function CertificateList({ items, onDownload, downloadingId, emptyText = 'Todavía no hay certificados emitidos' }: Props) {
   const columns: Column<CertificateListItem>[] = [
     { header: 'Tema', render: (c) => <span className="font-medium text-slate-900">{c.temaNombre}</span> },
     { header: 'Fecha', render: (c) => formatDate(c.fecha) },
-    { header: 'Nro. registro', render: (c) => c.nroRegistro },
+    { header: 'Nro. registro', render: (c) => c.nroRegistro, mono: true },
   ];
   if (items.some((c) => c.estado)) {
     columns.push({
@@ -68,7 +68,7 @@ export function CertificateList({ items, onDownload, downloadingId, emptyText = 
         <Button
           variant="secondary"
           className="px-2 py-1 text-xs"
-          disabled={downloadingId === c.id}
+          loading={downloadingId === c.id}
           onClick={() => onDownload(c.id)}
         >
           {downloadingId === c.id ? 'Preparando…' : 'Descargar'}

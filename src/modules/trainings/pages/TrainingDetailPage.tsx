@@ -27,7 +27,7 @@ import type { TrainingAttendee } from '../types';
 
 const baseColumns: Column<TrainingAttendee>[] = [
   { header: 'Apellido y nombre', render: (a) => `${a.apellido}, ${a.nombre}` },
-  { header: 'DNI', render: (a) => a.dni },
+  { header: 'DNI', render: (a) => a.dni, mono: true },
   // REGLA DE NEGOCIO: el puesto que tenía al momento del curso, no el actual.
   { header: 'Puesto al dictado', render: (a) => a.puestoNombreAlDictar ?? '—' },
   { header: 'Le correspondía', render: (a) => <ApplicabilityBadge value={a.aplicabilidad} /> },
@@ -66,12 +66,12 @@ export function TrainingDetailPage() {
     </Link>
   );
 
-  if (training.isLoading) return <EmptyState title="Cargando…" />;
+  if (training.isLoading) return <EmptyState tone="loading" title="Cargando…" />;
   if (training.isError || !training.data) {
     return (
-      <section className="space-y-4">
+      <section className="space-y-6">
         {back}
-        <EmptyState title="No se pudo cargar la capacitación" description={errorMessage(training.error)} />
+        <EmptyState tone="error" title="No se pudo cargar la capacitación" description={errorMessage(training.error)} />
       </section>
     );
   }
@@ -99,7 +99,7 @@ export function TrainingDetailPage() {
             <Button
               variant="secondary"
               className="px-2 py-1 text-xs"
-              disabled={download.isPending && download.variables === c.id}
+              loading={download.isPending && download.variables === c.id}
               onClick={() => {
                 setDownloadError(null);
                 download.mutate(c.id, { onError: (err) => setDownloadError(errorMessage(err)) });
@@ -114,7 +114,7 @@ export function TrainingDetailPage() {
   }
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       {back}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-2">
@@ -132,7 +132,7 @@ export function TrainingDetailPage() {
             {canEdit && (
               <Link
                 to={`/trainings/${t.id}/edit`}
-                className="rounded border border-slate-300 bg-white px-3 py-2 text-center text-sm font-medium text-slate-800 hover:bg-slate-50"
+                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-center text-sm font-medium text-slate-800 hover:bg-slate-50"
               >
                 Editar
               </Link>
@@ -143,13 +143,13 @@ export function TrainingDetailPage() {
       </div>
 
       {t.estado === 'anulada' && (
-        <p className="rounded border border-red-200 bg-red-50 p-2 text-sm text-red-800">
+        <p className="rounded-md border border-red-200 bg-red-50 p-2 text-sm text-red-800">
           Esta capacitación está anulada. Se conserva en el historial y su número de registro no se reutiliza.
           {t.tieneCertificados && ' Sus certificados quedaron anulados.'}
         </p>
       )}
       {activa && !t.tieneCertificados && (isOwn || isGerente) && aprobados === 0 && (
-        <p className="rounded border border-slate-200 bg-slate-50 p-2 text-sm text-slate-700">
+        <p className="rounded-md border border-slate-200 bg-slate-50 p-2 text-sm text-slate-700">
           No hay asistentes aprobados: no hay certificados para generar.
         </p>
       )}

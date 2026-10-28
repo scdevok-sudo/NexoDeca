@@ -34,19 +34,19 @@ export function TrainingFormPage() {
 
   if (!id) {
     return (
-      <section className="space-y-4">
+      <section className="space-y-6">
         {header('Registrar capacitación')}
         <TrainingForm onCancel={() => navigate(backTo)} onSaved={(t) => navigate(`/trainings/${t.id}`)} />
       </section>
     );
   }
 
-  if (training.isLoading) return <EmptyState title="Cargando…" />;
+  if (training.isLoading) return <EmptyState tone="loading" title="Cargando…" />;
   if (training.isError || !training.data) {
     return (
-      <section className="space-y-4">
+      <section className="space-y-6">
         {header('Editar capacitación')}
-        <EmptyState title="No se pudo cargar la capacitación" description={errorMessage(training.error)} />
+        <EmptyState tone="error" title="No se pudo cargar la capacitación" description={errorMessage(training.error)} />
       </section>
     );
   }
@@ -62,7 +62,7 @@ export function TrainingFormPage() {
           : null;
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       {header(`Editar capacitación Nro. ${t.nroRegistro}`)}
       {motivo ? (
         <div className="rounded-lg border border-slate-200 bg-white">

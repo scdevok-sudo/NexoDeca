@@ -70,7 +70,7 @@ export function PlanPage() {
   const meses = draft ?? plan.data?.meses;
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold text-slate-900">Plan anual</h1>
@@ -132,9 +132,9 @@ export function PlanPage() {
       )}
 
       {plan.isLoading ? (
-        <EmptyState title="Cargando…" />
+        <EmptyState tone="loading" title="Cargando…" />
       ) : plan.isError ? (
-        <EmptyState title="No se pudo cargar el plan" description={errorMessage(plan.error)} />
+        <EmptyState tone="error" title="No se pudo cargar el plan" description={errorMessage(plan.error)} />
       ) : !meses ? (
         <div className="rounded-lg border border-slate-200 bg-white">
           <EmptyState

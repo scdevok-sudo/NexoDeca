@@ -48,7 +48,7 @@ export function CompliancePage() {
   const cuenta = (estado: string) => items.filter((i) => i.estado === estado).length;
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       <div>
         <h1 className="text-xl font-semibold text-slate-900">Vencimientos</h1>
         <p className="text-sm text-slate-600">
@@ -62,9 +62,9 @@ export function CompliancePage() {
       </div>
 
       {list.isLoading ? (
-        <EmptyState title="Calculando…" />
+        <EmptyState tone="loading" title="Calculando…" />
       ) : list.isError ? (
-        <EmptyState title="No se pudieron calcular los vencimientos" description={errorMessage(list.error)} />
+        <EmptyState tone="error" title="No se pudieron calcular los vencimientos" description={errorMessage(list.error)} />
       ) : items.length === 0 ? (
         <div className="rounded-lg border border-slate-200 bg-white">
           <EmptyState title="Todo al día" description="No hay capacitaciones vencidas ni por vencer con esos filtros." />

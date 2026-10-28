@@ -115,7 +115,7 @@ export function AttendeePicker({ topic, value, onChange, error }: Props) {
       <div className="space-y-2">
         <p className="text-sm font-medium text-slate-700">Asistentes ({value.length})</p>
         {noCorresponden > 0 && (
-          <p role="status" className="rounded border border-amber-300 bg-amber-50 p-2 text-sm text-amber-900">
+          <p role="status" className="rounded-md border border-amber-300 bg-amber-50 p-2 text-sm text-amber-900">
             A {noCorresponden === 1 ? '1 persona' : `${noCorresponden} personas`} este tema no le correspondía según su
             puesto. Se puede guardar igual: es solo un aviso.
           </p>

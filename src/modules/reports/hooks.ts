@@ -19,7 +19,7 @@ export function useListMonthlyReports() {
   });
 }
 
-/** Genera el reporte, lo descarga y refresca el historial (aparece la versión nueva). */
+/** Genera el reporte (Excel o PDF), lo descarga y refresca el historial (aparece la versión nueva). */
 export function useGenerateMonthlyReport() {
   const qc = useQueryClient();
   return useMutation({
@@ -32,7 +32,7 @@ export function useGenerateMonthlyReport() {
   });
 }
 
-/** Pide la URL firmada y navega a ella: el Excel se descarga como adjunto, sin salir de la pantalla. */
+/** Pide la URL firmada y navega a ella: el archivo (Excel o PDF) se descarga como adjunto, sin salir de la pantalla. */
 export function useDownloadReport() {
   return useMutation({
     mutationFn: async (id: string) => {

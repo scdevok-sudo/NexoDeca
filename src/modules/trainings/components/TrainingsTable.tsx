@@ -6,7 +6,6 @@
  *  - Mostrar estado (anulada) y nro de registro.
  */
 
-import { Link } from 'react-router-dom';
 import { Badge } from '../../../components/ui/Badge';
 import { Table, type Column } from '../../../components/ui/Table';
 import type { TrainingListItem } from '../types';
@@ -27,18 +26,19 @@ export function TrainingsTable({ rows, showTrainer }: Props) {
   const columns: Column<TrainingListItem>[] = [
     {
       header: 'Nro. registro',
-      render: (t) => (
-        <Link to={`/trainings/${t.id}`} className="font-medium text-slate-900 underline-offset-2 hover:underline">
-          {t.nroRegistro}
-        </Link>
-      ),
+      render: (t) => <span className="font-medium text-slate-900">{t.nroRegistro}</span>,
+      mono: true,
     },
     { header: 'Fecha', render: (t) => formatDate(t.fecha) },
     { header: 'Tema', render: (t) => t.topicNombre },
   ];
-  if (showTrainer) columns.push({ header: 'Capacitador', render: (t) => t.capacitadorNombre ?? '—' });
+  if (showTrainer)
+    columns.push({
+      header: 'Capacitador',
+      render: (t) => t.capacitadorNombre ?? '—',
+    });
   columns.push(
-    { header: 'Asistentes', render: (t) => t.cantidadAsistentes },
+    { header: 'Asistentes', render: (t) => t.cantidadAsistentes, align: 'right', mono: true },
     {
       header: 'Estado',
       render: (t) =>
@@ -52,5 +52,13 @@ export function TrainingsTable({ rows, showTrainer }: Props) {
     },
   );
 
-  return <Table columns={columns} rows={rows} rowKey={(t) => t.id} emptyText="No hay capacitaciones con esos filtros" />;
+  return (
+    <Table
+      columns={columns}
+      rows={rows}
+      rowKey={(t) => t.id}
+      rowHref={(t) => `/trainings/${t.id}`}
+      emptyText="No hay capacitaciones con esos filtros"
+    />
+  );
 }

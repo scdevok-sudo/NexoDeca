@@ -7,7 +7,6 @@
  *  - Ocultar acciones de edición al Capacitador (y reforzar con RLS).
  */
 
-import { Link } from 'react-router-dom';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { Table, type Column } from '../../../components/ui/Table';
@@ -30,12 +29,12 @@ export function PersonnelTable({ rows, canEdit, onDeactivate }: Props) {
     {
       header: 'Apellido y nombre',
       render: (p) => (
-        <Link to={`/personnel/${p.id}`} className="font-medium text-slate-900 underline-offset-2 hover:underline">
+        <span className="font-medium text-slate-900">
           {p.apellido}, {p.nombre}
-        </Link>
+        </span>
       ),
     },
-    { header: 'DNI', render: (p) => p.dni },
+    { header: 'DNI', render: (p) => p.dni, mono: true },
     { header: 'Puesto', render: (p) => p.puestoNombre ?? 'Sin asignar' },
     { header: 'Ingreso', render: (p) => formatDate(p.fechaIngreso) },
     {
@@ -49,12 +48,20 @@ export function PersonnelTable({ rows, canEdit, onDeactivate }: Props) {
       header: 'Acciones',
       render: (p) =>
         p.activo ? (
-          <Button variant="secondary" className="px-2 py-1 text-xs" onClick={() => onDeactivate(p)}>
+          <Button variant="secondary" className="relative z-10 px-2 py-1 text-xs" onClick={() => onDeactivate(p)}>
             Desactivar
           </Button>
         ) : null,
     });
   }
 
-  return <Table columns={columns} rows={rows} rowKey={(p) => p.id} emptyText="No hay personas con esos filtros" />;
+  return (
+    <Table
+      columns={columns}
+      rows={rows}
+      rowKey={(p) => p.id}
+      rowHref={(p) => `/personnel/${p.id}`}
+      emptyText="No hay personas con esos filtros"
+    />
+  );
 }

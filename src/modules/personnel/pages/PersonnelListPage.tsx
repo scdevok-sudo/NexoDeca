@@ -78,9 +78,9 @@ export function PersonnelListPage() {
   };
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <h1 className="text-xl font-semibold text-slate-900">Personal</h1>
+        <div className="space-y-1"><h1 className="text-xl font-semibold text-slate-900">Personal</h1><p className="text-sm text-slate-600">Legajo del personal de Deca: puesto, ingreso y estado. Entrá a una persona para ver su historial de capacitaciones.</p></div>
         {canEdit && (
           <div className="flex gap-2">
             <Button variant="secondary" onClick={() => setImporting(true)}>
@@ -97,9 +97,9 @@ export function PersonnelListPage() {
 
       <div className="rounded-lg border border-slate-200 bg-white p-2">
         {list.isLoading ? (
-          <EmptyState title="Cargando…" />
+          <EmptyState tone="loading" title="Cargando…" />
         ) : list.isError ? (
-          <EmptyState title="No se pudo cargar el personal" description={errorMessage(list.error)} />
+          <EmptyState tone="error" title="No se pudo cargar el personal" description={errorMessage(list.error)} />
         ) : (
           <>
             <PersonnelTable rows={list.data?.data ?? []} canEdit={canEdit} onDeactivate={setToDeactivate} />

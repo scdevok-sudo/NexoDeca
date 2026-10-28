@@ -26,7 +26,7 @@ export function PersonnelDetailPage() {
   const person = useGetPerson(id);
   const [editing, setEditing] = useState(false);
 
-  if (person.isLoading) return <EmptyState title="Cargando…" />;
+  if (person.isLoading) return <EmptyState tone="loading" title="Cargando…" />;
   if (person.isError || !person.data) {
     const notFound = person.error instanceof ApiError && person.error.status === 404;
     return (
@@ -41,7 +41,7 @@ export function PersonnelDetailPage() {
 
   const p = person.data;
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       <Link to="/personnel" className="text-sm text-slate-600 underline">
         ← Personal
       </Link>

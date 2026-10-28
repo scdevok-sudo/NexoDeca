@@ -11,6 +11,7 @@ import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Select } from '../../../components/ui/Select';
 import { monthYearSchema } from '../schemas';
+import type { ReportFormat } from '../types';
 
 export const MESES = [
   'Enero',
@@ -33,11 +34,12 @@ interface FormValues {
 }
 
 interface Props {
-  onSubmit: (year: number, month: number) => void;
-  loading: boolean;
+  onSubmit: (year: number, month: number, formato: ReportFormat) => void;
+  /** Formato que se está generando ahora (null si no hay nada en curso). */
+  loadingFormat: ReportFormat | null;
 }
 
-export function MonthYearPicker({ onSubmit, loading }: Props) {
+export function MonthYearPicker({ onSubmit, loadingFormat }: Props) {
   const hoy = new Date();
   const {
     register,
@@ -45,23 +47,32 @@ export function MonthYearPicker({ onSubmit, loading }: Props) {
     setError,
     formState: { errors },
   } = useForm<FormValues>({
-    defaultValues: { month: String(hoy.getMonth() + 1), year: String(hoy.getFullYear()) },
+    defaultValues: {
+      month: String(hoy.getMonth() + 1),
+      year: String(hoy.getFullYear()),
+    },
   });
 
-  const submit = handleSubmit((v) => {
-    const parsed = monthYearSchema.safeParse({ year: Number(v.year), month: Number(v.month) });
-    if (parsed.success) {
-      onSubmit(parsed.data.year, parsed.data.month);
-      return;
-    }
-    // Cada error va a su campo; el de "mes futuro" es de todo el objeto (sin campo): se muestra en "Mes".
-    for (const issue of parsed.error.issues) {
-      setError(issue.path[0] === 'year' ? 'year' : 'month', { message: issue.message });
-    }
-  });
+  const submit = (formato: ReportFormat) =>
+    handleSubmit((v) => {
+      const parsed = monthYearSchema.safeParse({
+        year: Number(v.year),
+        month: Number(v.month),
+      });
+      if (parsed.success) {
+        onSubmit(parsed.data.year, parsed.data.month, formato);
+        return;
+      }
+      // Cada error va a su campo; el de "mes futuro" es de todo el objeto (sin campo): se muestra en "Mes".
+      for (const issue of parsed.error.issues) {
+        setError(issue.path[0] === 'year' ? 'year' : 'month', {
+          message: issue.message,
+        });
+      }
+    });
 
   return (
-    <form onSubmit={submit} className="grid gap-3 md:grid-cols-3" noValidate>
+    <form onSubmit={(e) => void submit('xlsx')(e)} className="grid gap-3 md:grid-cols-2 lg:grid-cols-4" noValidate>
       <Select
         label="Mes"
         options={MESES.map((m, i) => ({ value: String(i + 1), label: m }))}
@@ -78,8 +89,20 @@ export function MonthYearPicker({ onSubmit, loading }: Props) {
         {...register('year')}
       />
       <div className="flex items-end">
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Generando…' : 'Generar reporte'}
+        <Button type="submit" className="w-full" loading={loadingFormat === 'xlsx'} disabled={loadingFormat !== null}>
+          {loadingFormat === 'xlsx' ? 'Generando…' : 'Descargar Excel'}
+        </Button>
+      </div>
+      <div className="flex items-end">
+        <Button
+          type="button"
+          variant="secondary"
+          className="w-full"
+          loading={loadingFormat === 'pdf'}
+          disabled={loadingFormat !== null}
+          onClick={(e) => void submit('pdf')(e)}
+        >
+          {loadingFormat === 'pdf' ? 'Generando…' : 'Descargar PDF'}
         </Button>
       </div>
     </form>

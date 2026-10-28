@@ -53,11 +53,11 @@ export function SignatureSettingsPage() {
     }
   });
 
-  if (settings.isLoading) return <EmptyState title="Cargando…" />;
+  if (settings.isLoading) return <EmptyState tone="loading" title="Cargando…" />;
   if (settings.isError) return <EmptyState title={errorMessage(settings.error)} />;
 
   return (
-    <section className="max-w-2xl space-y-4">
+    <section className="max-w-2xl space-y-6">
       <h1 className="text-xl font-semibold text-slate-900">Firma de los certificados</h1>
       <p className="text-sm text-slate-600">
         Datos del Responsable de Seguridad e Higiene que aparecen en los certificados nuevos. Si dejás el nombre vacío, el

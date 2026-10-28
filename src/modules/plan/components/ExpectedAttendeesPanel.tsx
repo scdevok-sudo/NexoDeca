@@ -18,15 +18,15 @@ interface Props {
 
 const columns: Column<ExpectedAttendee>[] = [
   { header: 'Apellido y nombre', render: (p) => `${p.apellido}, ${p.nombre}` },
-  { header: 'DNI', render: (p) => p.dni },
+  { header: 'DNI', render: (p) => p.dni, mono: true },
   { header: 'Puesto', render: (p) => p.puestoNombre ?? 'Sin asignar' },
 ];
 
 export function ExpectedAttendeesPanel({ topic }: Props) {
   const list = useExpectedAttendees(topic.id);
 
-  if (list.isLoading) return <EmptyState title="Cargando…" />;
-  if (list.isError) return <EmptyState title="No se pudo calcular" description={errorMessage(list.error)} />;
+  if (list.isLoading) return <EmptyState tone="loading" title="Cargando…" />;
+  if (list.isError) return <EmptyState tone="error" title="No se pudo calcular" description={errorMessage(list.error)} />;
 
   const personas = list.data ?? [];
   return (

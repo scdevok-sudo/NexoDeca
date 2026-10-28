@@ -79,9 +79,9 @@ export function TopicsPage() {
   };
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <h1 className="text-xl font-semibold text-slate-900">Catálogo de temas</h1>
+        <div className="space-y-1"><h1 className="text-xl font-semibold text-slate-900">Catálogo de temas</h1><p className="text-sm text-slate-600">Temas de capacitación con su tipo, duración y cada cuánto vencen.</p></div>
         {canEdit && <Button onClick={() => setCreating(true)}>Nuevo tema</Button>}
       </div>
 
@@ -91,9 +91,9 @@ export function TopicsPage() {
 
       <div className="rounded-lg border border-slate-200 bg-white p-2">
         {list.isLoading ? (
-          <EmptyState title="Cargando…" />
+          <EmptyState tone="loading" title="Cargando…" />
         ) : list.isError ? (
-          <EmptyState title="No se pudo cargar el catálogo" description={errorMessage(list.error)} />
+          <EmptyState tone="error" title="No se pudo cargar el catálogo" description={errorMessage(list.error)} />
         ) : (
           <>
             <TopicsTable

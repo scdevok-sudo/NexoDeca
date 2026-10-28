@@ -56,12 +56,12 @@ export function TrainingsListPage() {
   const list = useListTrainings(filters);
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <h1 className="text-xl font-semibold text-slate-900">Capacitaciones dictadas</h1>
+        <div className="space-y-1"><h1 className="text-xl font-semibold text-slate-900">Capacitaciones dictadas</h1><p className="text-sm text-slate-600">Buscá por fecha, tema o capacitador y entrá al detalle para ver asistentes y certificados.</p></div>
         <Link
           to="/trainings/new"
-          className="rounded bg-slate-900 px-3 py-2 text-center text-sm font-medium text-white hover:bg-slate-800"
+          className="rounded-md bg-brand-800 px-3 py-2 text-center text-sm font-medium text-white hover:bg-brand-700"
         >
           Registrar capacitación
         </Link>
@@ -73,9 +73,9 @@ export function TrainingsListPage() {
 
       <div className="rounded-lg border border-slate-200 bg-white p-2">
         {list.isLoading ? (
-          <EmptyState title="Cargando…" />
+          <EmptyState tone="loading" title="Cargando…" />
         ) : list.isError ? (
-          <EmptyState title="No se pudieron cargar las capacitaciones" description={errorMessage(list.error)} />
+          <EmptyState tone="error" title="No se pudieron cargar las capacitaciones" description={errorMessage(list.error)} />
         ) : (
           <>
             <TrainingsTable rows={list.data?.data ?? []} showTrainer={isGerente} />

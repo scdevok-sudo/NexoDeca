@@ -18,7 +18,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const from = safeInternalPath((location.state as { from?: unknown } | null)?.from);
 
-  if (loading) return <EmptyState title="Cargando sesión…" />;
+  if (loading) return <EmptyState tone="loading" title="Cargando sesión…" />;
   if (user) return <Navigate to={from} replace />;
 
   return (

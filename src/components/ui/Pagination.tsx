@@ -22,7 +22,7 @@ export function Pagination({ page, total, pageSize = PAGE_SIZE, onChange }: Prop
       <Button variant="secondary" disabled={page <= 1} onClick={() => onChange(page - 1)}>
         Anterior
       </Button>
-      <span>
+      <span className="text-slate-600">
         Página {page} de {pages}
       </span>
       <Button variant="secondary" disabled={page >= pages} onClick={() => onChange(page + 1)}>

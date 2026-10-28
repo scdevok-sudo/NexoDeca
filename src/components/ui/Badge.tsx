@@ -18,5 +18,7 @@ const TONES: Record<NonNullable<Props['tone']>, string> = {
 };
 
 export function Badge({ tone = 'neutral', children }: Props) {
-  return <span className={'rounded-full px-2 py-0.5 text-xs font-medium ' + TONES[tone]}>{children}</span>;
+  return (
+    <span className={'rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ' + TONES[tone]}>{children}</span>
+  );
 }

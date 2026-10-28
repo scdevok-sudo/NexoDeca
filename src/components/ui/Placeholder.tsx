@@ -19,7 +19,7 @@ interface Props {
 export function Placeholder({ code, module, title, route, roles, inline }: Props) {
   if (inline) {
     return (
-      <div className="rounded border border-dashed border-slate-300 p-2 text-sm text-slate-500">
+      <div className="rounded-md border border-dashed border-slate-300 p-2 text-sm text-slate-500">
         [{code}] {title}
       </div>
     );

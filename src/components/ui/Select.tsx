@@ -22,7 +22,13 @@ export function Select({ label, error, options, className = '', ...rest }: Props
   return (
     <label className="block text-sm">
       {label && <span className="mb-1 block font-medium text-slate-700">{label}</span>}
-      <select className={'w-full rounded border border-slate-300 px-3 py-2 ' + className} {...rest}>
+      <select
+        className={
+          'w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline-2 focus-visible:outline-brand-500 ' +
+          className
+        }
+        {...rest}
+      >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}

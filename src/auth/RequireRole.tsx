@@ -24,7 +24,7 @@ export function RequireRole({ roles, children }: Props) {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) return <EmptyState title="Cargando sesión…" />;
+  if (loading) return <EmptyState tone="loading" title="Cargando sesión…" />;
   if (!user) {
     return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }

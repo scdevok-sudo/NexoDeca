@@ -6,7 +6,6 @@
  *  - Badge nunca lo hizo / vencida / por vencer. Agrupado por tema (spec §8).
  */
 
-import { Link } from 'react-router-dom';
 import { Badge } from '../../../components/ui/Badge';
 import { Table, type Column } from '../../../components/ui/Table';
 import type { ComplianceItem, ComplianceStatus } from '../types';
@@ -34,13 +33,9 @@ function detalle(i: ComplianceItem): string {
 const columns: Column<ComplianceItem>[] = [
   {
     header: 'Persona',
-    render: (i) => (
-      <Link to={`/personnel/${i.personId}`} className="font-medium text-slate-900 underline-offset-2 hover:underline">
-        {i.personaNombre}
-      </Link>
-    ),
+    render: (i) => <span className="font-medium text-slate-900">{i.personaNombre}</span>,
   },
-  { header: 'DNI', render: (i) => i.dni },
+  { header: 'DNI', render: (i) => i.dni, mono: true },
   { header: 'Puesto', render: (i) => i.puestoNombre },
   { header: 'Último aprobado', render: (i) => formatDate(i.ultimoAprobado) },
   { header: 'Vence', render: (i) => (i.venceEl ? `${formatDate(i.venceEl)} (${detalle(i)})` : '—') },
@@ -61,9 +56,18 @@ export function ComplianceTable({ items }: { items: ComplianceItem[] }) {
       {[...grupos.entries()].map(([topicId, g]) => (
         <section key={topicId} className="rounded-lg border border-slate-200 bg-white p-2">
           <h2 className="px-2 pt-2 font-medium text-slate-900">
-            {g.nombre} <span className="text-sm font-normal text-slate-500">· vence cada {g.items[0].periodicidadMeses} meses · {g.items.length} {g.items.length === 1 ? 'persona' : 'personas'}</span>
+            {g.nombre}{' '}
+            <span className="text-sm font-normal text-slate-500">
+              · vence cada {g.items[0].periodicidadMeses} meses · {g.items.length}{' '}
+              {g.items.length === 1 ? 'persona' : 'personas'}
+            </span>
           </h2>
-          <Table columns={columns} rows={g.items} rowKey={(i) => `${i.personId}-${i.topicId}`} />
+          <Table
+            columns={columns}
+            rows={g.items}
+            rowKey={(i) => `${i.personId}-${i.topicId}`}
+            rowHref={(i) => `/personnel/${i.personId}`}
+          />
         </section>
       ))}
     </div>

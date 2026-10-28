@@ -43,7 +43,7 @@ export function TopicsTable({ rows, positionNames, canEdit, onEdit, onDeactivate
       header: 'Vence cada',
       render: (t) => (t.periodicidadMeses === null ? 'No vence' : `${t.periodicidadMeses} meses`),
     },
-    { header: 'Duración', render: (t) => `${t.duracionHoras} h` },
+    { header: 'Duración', render: (t) => `${t.duracionHoras} h`, align: 'right', mono: true },
     {
       header: 'Estado',
       render: (t) => <Badge tone={t.activo ? 'success' : 'neutral'}>{t.activo ? 'Activo' : 'Inactivo'}</Badge>,

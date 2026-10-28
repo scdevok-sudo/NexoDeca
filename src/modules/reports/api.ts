@@ -14,7 +14,7 @@
 import { supabase } from '../../lib/supabase';
 import { ApiError, fromFunctionsError, fromPostgrestError } from '../../lib/apiError';
 import type { UUID } from '../../types/common';
-import type { GeneratedReport, MonthlyReport } from './types';
+import type { GeneratedReport, MonthlyReport, ReportFormat } from './types';
 import { monthYearSchema } from './schemas';
 
 const ERRORS = {
@@ -29,7 +29,11 @@ const ERRORS = {
  *   nueva (la anterior queda).
  * Errores: 400 año/mes inválidos o mes futuro.
  */
-export async function generateMonthlyReport(year: number, month: number): Promise<GeneratedReport> {
+export async function generateMonthlyReport(
+  year: number,
+  month: number,
+  formato: ReportFormat = 'xlsx',
+): Promise<GeneratedReport> {
   const parsed = monthYearSchema.safeParse({ year, month });
   if (!parsed.success) throw new ApiError(400, parsed.error.issues[0]?.message ?? 'Mes inválido');
 
@@ -38,11 +42,27 @@ export async function generateMonthlyReport(year: number, month: number): Promis
     anio: number;
     mes: number;
     version: number;
+    formato: ReportFormat;
     downloadUrl: string;
-  }>('monthly-report', { body: { year, month } });
+  }>('monthly-report', { body: { year, month, formato } });
   if (error) throw await fromFunctionsError(error);
   if (!data) throw new ApiError(500, 'Respuesta vacía del servidor');
-  return { id: data.id, year: data.anio, month: data.mes, version: data.version, downloadUrl: data.downloadUrl };
+  // Defensa: si el servidor corre una versión vieja de monthly-report ignora `formato` y devuelve siempre Excel.
+  // Mejor frenar con un error claro que descargar un archivo distinto del que se pidió.
+  if (data.formato !== formato) {
+    throw new ApiError(
+      502,
+      `El servidor no generó el reporte en ${formato.toUpperCase()}. Avisá a soporte: falta actualizar el servidor.`,
+    );
+  }
+  return {
+    id: data.id,
+    year: data.anio,
+    month: data.mes,
+    version: data.version,
+    formato: data.formato,
+    downloadUrl: data.downloadUrl,
+  };
 }
 
 /**
@@ -66,7 +86,7 @@ export async function listMonthlyReports(): Promise<MonthlyReport[]> {
     anio: number;
     mes: number;
     version: number;
-    formato: 'xlsx';
+    formato: ReportFormat;
     created_at: string;
     cantidad_capacitaciones: number;
     cantidad_participantes: number;
@@ -90,7 +110,9 @@ export async function listMonthlyReports(): Promise<MonthlyReport[]> {
  * PERMISOS: Gerente, Capacitador. Devuelve una URL firmada que vence a los 2 minutos.
  */
 export async function getReportDownloadUrl(id: UUID): Promise<string> {
-  const { data, error } = await supabase.functions.invoke<{ url: string }>('report-download', { body: { reportId: id } });
+  const { data, error } = await supabase.functions.invoke<{ url: string }>('report-download', {
+    body: { reportId: id },
+  });
   if (error) throw await fromFunctionsError(error);
   if (!data?.url) throw new ApiError(500, 'Respuesta vacía del servidor');
   return data.url;

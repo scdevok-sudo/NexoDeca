@@ -33,9 +33,9 @@ export function PositionsPage() {
   const rows = (list.data ?? []).filter((p) => showInactive || p.activo);
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <h1 className="text-xl font-semibold text-slate-900">Puestos</h1>
+        <div className="space-y-1"><h1 className="text-xl font-semibold text-slate-900">Puestos</h1><p className="text-sm text-slate-600">Puestos de trabajo que se asignan al personal y definen qué capacitaciones le corresponden.</p></div>
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />
@@ -47,9 +47,9 @@ export function PositionsPage() {
 
       <div className="rounded-lg border border-slate-200 bg-white p-2">
         {list.isLoading ? (
-          <EmptyState title="Cargando…" />
+          <EmptyState tone="loading" title="Cargando…" />
         ) : list.isError ? (
-          <EmptyState title="No se pudieron cargar los puestos" description={errorMessage(list.error)} />
+          <EmptyState tone="error" title="No se pudieron cargar los puestos" description={errorMessage(list.error)} />
         ) : (
           <PositionsTable rows={rows} canEdit={canEdit} onEdit={setEditing} onDeactivate={setToDeactivate} />
         )}

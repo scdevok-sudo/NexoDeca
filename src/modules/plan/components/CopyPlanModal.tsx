@@ -72,7 +72,7 @@ export function CopyPlanModal({ open, year, hasTopics, onClose }: Props) {
             están inactivos no se copian.
           </p>
           {hasTopics && (
-            <p role="alert" className="rounded border border-amber-300 bg-amber-50 p-2 text-sm text-amber-900">
+            <p role="alert" className="rounded-md border border-amber-300 bg-amber-50 p-2 text-sm text-amber-900">
               {year} ya tiene temas planificados: se van a <strong>reemplazar</strong> por los del año que elijas.
             </p>
           )}
