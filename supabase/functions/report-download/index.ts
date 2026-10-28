@@ -8,7 +8,8 @@
  *
  * PERMISOS: Gerente y Capacitador (cualquier reporte del historial).
  * REGLA DE NEGOCIO: se descarga el archivo tal cual se generó (no se regenera): es lo que se le entregó a YPF.
- * El bucket es privado y sin policies (0016): solo la service role lee los objetos.
+ * El tipo de archivo sale del `formato` guardado (xlsx | pdf): el content-type lo fija el objeto al subirse (monthly-report)
+ * y la extensión del nombre de descarga sale de acá. El bucket es privado y sin policies (0016): solo la service role lee los objetos.
  */
 
 import { handleCors } from '../_shared/cors.ts';
@@ -38,13 +39,13 @@ Deno.serve(async (req) => {
     const admin = adminClient();
     const { data, error } = await admin
       .from('monthly_reports')
-      .select('storage_path, anio, mes, version')
+      .select('storage_path, anio, mes, version, formato')
       .eq('id', reportId)
       .maybeSingle();
     if (error) throw new HttpError(500, 'No se pudo leer el reporte');
     if (!data) throw notFound('El reporte no existe');
 
-    const fileName = `reporte-ypf-${data.anio}-${String(data.mes).padStart(2, '0')}-v${data.version}.xlsx`;
+    const fileName = `reporte-ypf-${data.anio}-${String(data.mes).padStart(2, '0')}-v${data.version}.${data.formato}`; // 'xlsx' | 'pdf', según cómo se generó
     const { data: signed, error: signError } = await admin.storage
       .from(BUCKET)
       .createSignedUrl(data.storage_path, URL_TTL_SECONDS, { download: fileName });

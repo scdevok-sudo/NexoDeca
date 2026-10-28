@@ -34,7 +34,8 @@ import { HttpError, badRequest, conflict, errorToResponse, jsonResponse, notFoun
 import { log } from '../_shared/logger.ts';
 import { readJsonLimited } from '../_shared/body.ts';
 import { adminClient } from '../_shared/supabase.ts';
-import { logoDecaPng } from './logo-base64.ts';
+import { logoDecaPng } from '../_shared/logo-base64.ts';
+import { winAnsiSafe } from '../_shared/pdf.ts';
 
 const FN = 'generate-certificates';
 const BUCKET = 'certificados-pdf';
@@ -110,21 +111,6 @@ function addMonths(iso: string, months: number): string {
   const nm = total % 12;
   const last = new Date(Date.UTC(ny, nm + 1, 0)).getUTCDate();
   return `${ny}-${String(nm + 1).padStart(2, '0')}-${String(Math.min(d, last)).padStart(2, '0')}`;
-}
-
-/**
- * Las fuentes estándar de pdf-lib solo cubren WinAnsi (incluye á, é, ñ, ü…). Un carácter fuera de eso haría fallar
- * el PDF: se le saca el acento y, si aun así no entra, se reemplaza por '?'.
- */
-function winAnsiSafe(text: string): string {
-  return [...text]
-    .map((ch) => {
-      const code = ch.codePointAt(0) ?? 0;
-      if (code < 256) return ch;
-      const base = ch.normalize('NFD').replace(/[̀-ͯ]/g, '');
-      return base.length === 1 && (base.codePointAt(0) ?? 0) < 256 ? base : '?';
-    })
-    .join('');
 }
 
 function drawCentered(page: PDFPage, text: string, y: number, font: PDFFont, size: number, color = rgb(0.1, 0.1, 0.1)) {
