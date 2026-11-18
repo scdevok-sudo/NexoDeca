@@ -23,9 +23,9 @@ export function Topbar({ onMenuClick }: Props) {
       .finally(() => setBusy(false));
   };
   return (
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 text-sm">
+    <header className="flex items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-2 text-sm">
       {/* En desktop/tablet el menú está en el Sidebar fijo: este botón y el logo solo se muestran en mobile. */}
-      <div className="flex items-center gap-3 md:hidden">
+      <div className="flex shrink-0 items-center gap-3 md:hidden">
         <button
           type="button"
           onClick={onMenuClick}
@@ -34,12 +34,12 @@ export function Topbar({ onMenuClick }: Props) {
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
         </button>
-        <img src={logo} alt="Deca Electromecánica" className="h-6 w-auto" />
+        <img src={logo} alt="Deca Electromecánica" className="h-6 w-auto shrink-0" />
       </div>
-      <span className="ml-auto mr-3 truncate text-slate-900 md:ml-0 md:mr-0">
+      <span className="ml-auto min-w-0 truncate text-slate-900 md:ml-0">
         {user?.nombre} <span className="text-slate-500">({user?.rol})</span>
       </span>
-      <Button variant="secondary" onClick={handleSignOut} loading={busy}>
+      <Button variant="secondary" className="shrink-0" onClick={handleSignOut} loading={busy}>
         Salir
       </Button>
     </header>
