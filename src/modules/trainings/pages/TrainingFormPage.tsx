@@ -7,7 +7,8 @@
  *  - Rutas: /trainings/new y /trainings/:id/edit · roles: gerente, capacitador
  */
 
-import { LINK_CLASS } from '../../../components/ui/styles';
+import { ArrowLeft } from 'lucide-react';
+import { buttonClass } from '../../../components/ui/styles';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
 import { errorMessage } from '../../../lib/apiError';
@@ -26,8 +27,9 @@ export function TrainingFormPage() {
 
   const header = (title: string) => (
     <div className="flex flex-col gap-1">
-      <Link to={backTo} className={LINK_CLASS + ' text-sm'}>
-        ← Volver
+      <Link to={backTo} className={buttonClass('secondary', 'self-start')}>
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Volver
       </Link>
       <h1 className="text-xl font-semibold text-slate-900">{title}</h1>
     </div>

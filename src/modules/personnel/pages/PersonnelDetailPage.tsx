@@ -7,7 +7,8 @@
  *  - Ruta: /personnel/:id · roles: gerente, capacitador
  */
 
-import { buttonClass, LINK_CLASS } from '../../../components/ui/styles';
+import { ArrowLeft } from 'lucide-react';
+import { buttonClass } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
@@ -34,6 +35,7 @@ export function PersonnelDetailPage() {
       <div className="text-center">
         <EmptyState title={notFound ? 'La persona no existe' : 'No se pudo cargar la ficha'} description={notFound ? undefined : errorMessage(person.error)} />
         <Link to="/personnel" className={buttonClass('secondary', 'mt-4')}>
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Volver al listado
         </Link>
       </div>
@@ -43,8 +45,9 @@ export function PersonnelDetailPage() {
   const p = person.data;
   return (
     <section className="space-y-6">
-      <Link to="/personnel" className={LINK_CLASS + ' text-sm'}>
-        ← Personal
+      <Link to="/personnel" className={buttonClass('secondary')}>
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Volver a Personal
       </Link>
 
       <div className="rounded-lg border border-slate-200 bg-white p-4">

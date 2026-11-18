@@ -9,6 +9,7 @@
  * PERMISOS: esto es solo UX. El permiso de verdad lo imponen RLS y las Edge Functions.
  */
 
+import { ArrowLeft } from 'lucide-react';
 import { buttonClass } from '../components/ui/styles';
 import type { ReactNode } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
@@ -34,6 +35,7 @@ export function RequireRole({ roles, children }: Props) {
       <div className="p-8 text-center">
         <EmptyState title="No tenés permiso para ver esta pantalla" />
         <Link to="/" className={buttonClass('secondary', 'mt-4')}>
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Volver al inicio
         </Link>
       </div>

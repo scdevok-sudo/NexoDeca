@@ -9,7 +9,8 @@
  *  - Ruta: /trainings/:id · roles: gerente, capacitador
  */
 
-import { buttonClass, LINK_CLASS } from '../../../components/ui/styles';
+import { ArrowLeft } from 'lucide-react';
+import { buttonClass } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
@@ -62,8 +63,9 @@ export function TrainingDetailPage() {
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const back = (
-    <Link to="/trainings" className={LINK_CLASS + ' text-sm'}>
-      ← Volver al listado
+    <Link to="/trainings" className={buttonClass('secondary', 'self-start')}>
+      <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+      Volver al listado
     </Link>
   );
 
