@@ -6,6 +6,7 @@
  *  - react-hook-form + personSchema; selector de puestos activos (M3).
  */
 
+import { CHECKBOX_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
@@ -89,7 +90,7 @@ export function PersonForm({ person, onSaved, onCancel }: Props) {
       />
       {isEdit && (
         <label className="flex items-center gap-2 self-end text-sm">
-          <input type="checkbox" {...register('activo')} />
+          <input type="checkbox" className={CHECKBOX_CLASS} {...register('activo')} />
           Activo
         </label>
       )}

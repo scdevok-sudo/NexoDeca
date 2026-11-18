@@ -15,6 +15,7 @@
  * PERMISOS: solo lo renderiza el Gerente; igual RLS rechaza la escritura de cualquier otro rol.
  */
 
+import { CHECKBOX_CLASS, TEXTAREA_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
@@ -74,7 +75,7 @@ export function PositionForm({ position, onSaved, onCancel }: Props) {
         <textarea
           rows={3}
           maxLength={500}
-          className="w-full rounded border border-slate-300 px-3 py-2"
+          className={TEXTAREA_CLASS}
           {...register('descripcion')}
         />
         {errors.descripcion?.message && (
@@ -83,7 +84,7 @@ export function PositionForm({ position, onSaved, onCancel }: Props) {
       </label>
       {isEdit && (
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" {...register('activo')} />
+          <input type="checkbox" className={CHECKBOX_CLASS} {...register('activo')} />
           Activo
         </label>
       )}

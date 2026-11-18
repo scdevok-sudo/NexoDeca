@@ -67,7 +67,7 @@ export function ReportsPage() {
       )}
 
       <div className="space-y-2 rounded-lg border border-slate-200 bg-white p-2">
-        <h2 className="px-2 pt-2 font-medium text-slate-800">Reportes generados</h2>
+        <h2 className="px-2 pt-2 font-medium text-slate-900">Reportes generados</h2>
         {history.isLoading ? (
           <EmptyState tone="loading" title="Cargando…" />
         ) : history.isError ? (

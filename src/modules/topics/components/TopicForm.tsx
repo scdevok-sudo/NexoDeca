@@ -6,6 +6,7 @@
  *  - react-hook-form + topicSchema; multi-select de puestos.
  */
 
+import { CHECKBOX_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
@@ -133,6 +134,7 @@ export function TopicForm({ topic, onSaved, onCancel }: Props) {
                   <label key={p.id} className="flex items-center gap-2 text-sm">
                     <input
                       type="checkbox"
+                      className={CHECKBOX_CLASS}
                       checked={field.value.includes(p.id)}
                       onChange={(e) =>
                         field.onChange(
@@ -152,7 +154,7 @@ export function TopicForm({ topic, onSaved, onCancel }: Props) {
 
       {isEdit && (
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" {...register('activo')} />
+          <input type="checkbox" className={CHECKBOX_CLASS} {...register('activo')} />
           Activo
         </label>
       )}

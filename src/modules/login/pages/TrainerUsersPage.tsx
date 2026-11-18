@@ -14,7 +14,7 @@ export function TrainerUsersPage() {
     <section className="space-y-6">
       <h1 className="text-xl font-semibold text-slate-900">Capacitadores</h1>
       <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <h2 className="mb-3 font-medium text-slate-800">Nueva cuenta</h2>
+        <h2 className="mb-3 font-medium text-slate-900">Nueva cuenta</h2>
         <CreateTrainerForm />
       </div>
     </section>

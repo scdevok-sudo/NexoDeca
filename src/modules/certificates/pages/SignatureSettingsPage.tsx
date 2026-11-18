@@ -8,6 +8,7 @@
  *  - Ruta: /certificate-signature · roles: gerente
  */
 
+import { FileInput } from '../../../components/ui/FileInput';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
@@ -69,22 +70,20 @@ export function SignatureSettingsPage() {
           <Input label="Cargo" error={errors.cargo?.message} {...register('cargo')} />
           <Input label="Matrícula" error={errors.matricula?.message} {...register('matricula')} />
         </div>
-        <label className="block text-sm">
-          <span className="mb-1 block font-medium text-slate-700">Imagen de la firma (PNG, máx. 512 KB)</span>
-          <input
-            type="file"
-            accept="image/png"
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm"
-          />
-          <span className="mt-1 block text-xs text-slate-500">
-            {file
-              ? `Se va a subir: ${file.name}`
+        <FileInput
+          label="Imagen de la firma (PNG, máx. 512 KB)"
+          accept="image/png"
+          buttonText="Subir imagen"
+          file={file}
+          onChange={setFile}
+          hint={
+            file
+              ? 'Se sube al guardar.'
               : settings.data?.firmaPath
                 ? 'Ya hay una firma cargada. Subí otra solo si querés reemplazarla.'
-                : 'Todavía no hay imagen de firma. Recomendado: fondo transparente.'}
-          </span>
-        </label>
+                : 'Todavía no hay imagen de firma. Recomendado: fondo transparente.'
+          }
+        />
         <Button type="submit" disabled={save.isPending} className="w-full md:w-auto">
           {save.isPending ? 'Guardando…' : 'Guardar'}
         </Button>

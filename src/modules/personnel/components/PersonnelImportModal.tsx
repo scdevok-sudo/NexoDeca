@@ -6,6 +6,7 @@
  *  - Mostrar procesados/importados/rechazados con motivo.
  */
 
+import { FileInput } from '../../../components/ui/FileInput';
 import { useState } from 'react';
 import { errorMessage } from '../../../lib/apiError';
 import { Button } from '../../../components/ui/Button';
@@ -49,15 +50,15 @@ export function PersonnelImportModal({ open, onClose }: Props) {
           Columnas: <code>dni, nombre, apellido, puesto, fecha_ingreso</code>. Separador coma o punto y coma. Fecha
           AAAA-MM-DD o DD/MM/AAAA. Máximo 1 MB.
         </p>
-        <input
-          type="file"
+        <FileInput
           accept=".csv,text/csv"
-          onChange={(e) => {
-            setFile(e.target.files?.[0] ?? null);
+          buttonText="Elegir archivo CSV"
+          file={file}
+          onChange={(f) => {
+            setFile(f);
             setReport(null);
             setError(null);
           }}
-          className="block w-full text-sm"
         />
         {error && (
           <p role="alert" className="text-red-600">

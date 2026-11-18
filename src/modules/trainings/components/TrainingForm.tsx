@@ -6,6 +6,7 @@
  *  - react-hook-form + trainingSchema.
  */
 
+import { TEXTAREA_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
@@ -114,7 +115,7 @@ export function TrainingForm({ training, onSaved, onCancel }: Props) {
         <label className="block text-sm md:col-span-2 lg:col-span-3">
           <span className="mb-1 block font-medium text-slate-700">Temario desarrollado</span>
           <textarea
-            className="w-full rounded border border-slate-300 px-3 py-2"
+            className={TEXTAREA_CLASS}
             rows={3}
             maxLength={2000}
             placeholder="Breve descripción de lo que se vio"

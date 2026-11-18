@@ -84,7 +84,7 @@ export function PersonnelDetailPage() {
       </div>
 
       <div className="rounded-lg border border-slate-200 bg-white p-4">
-        <h2 className="mb-3 font-medium text-slate-800">Certificados</h2>
+        <h2 className="mb-3 font-medium text-slate-900">Certificados</h2>
         <PersonCertificatesPanel personId={p.id} />
       </div>
     </section>

@@ -9,6 +9,7 @@
 
 // PERMISOS: gerente, capacitador (el guard está en routes/index.tsx; la verificación real es de RLS / Edge Functions).
 // TODO(M3): Capacitador: solo consulta.
+import { CHECKBOX_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { useAuth } from '../../../auth/useAuth';
 import { errorMessage } from '../../../lib/apiError';
@@ -38,7 +39,7 @@ export function PositionsPage() {
         <div className="space-y-1"><h1 className="text-xl font-semibold text-slate-900">Puestos</h1><p className="text-sm text-slate-600">Puestos de trabajo que se asignan al personal y definen qué capacitaciones le corresponden.</p></div>
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2 text-sm text-slate-700">
-            <input type="checkbox" checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />
+            <input type="checkbox" className={CHECKBOX_CLASS} checked={showInactive} onChange={(e) => setShowInactive(e.target.checked)} />
             Mostrar inactivos
           </label>
           {canEdit && <Button onClick={() => setEditing('new')}>Nuevo puesto</Button>}

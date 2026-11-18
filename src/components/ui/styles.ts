@@ -41,3 +41,11 @@ export function iconButtonClass(danger = false): string {
     FOCUS_RING
   );
 }
+
+/** Checkbox nativo con el acento de marca (en vez del azul del navegador), tamaño uniforme y foco visible. */
+export const CHECKBOX_CLASS =
+  'h-4 w-4 shrink-0 cursor-pointer accent-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500';
+
+/** Textarea con la misma línea que Input. */
+export const TEXTAREA_CLASS =
+  'w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus-visible:outline-2 focus-visible:outline-brand-500';
