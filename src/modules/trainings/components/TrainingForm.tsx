@@ -9,7 +9,7 @@
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
-import { parseForm } from '../../../lib/forms';
+import { parseForm, faltaAlgo } from '../../../lib/forms';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Select } from '../../../components/ui/Select';
@@ -66,6 +66,8 @@ export function TrainingForm({ training, onSaved, onCancel }: Props) {
       })),
     },
   });
+  // Deshabilita el submit mientras falte un obligatorio; la validación real sigue siendo la de zod en el submit.
+  const incompleto = faltaAlgo(useWatch({ control, name: ['topicId', 'fecha', 'duracionHoras', 'asistentes'] }));
 
   // REGLA DE NEGOCIO (decidido con Lucas, 2026-10-17): solo temas activos para lo nuevo. En edición se muestra
   //   también el tema actual aunque se haya desactivado después, para no forzar un cambio.
@@ -149,7 +151,7 @@ export function TrainingForm({ training, onSaved, onCancel }: Props) {
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting || incompleto}>
           {isSubmitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Registrar capacitación'}
         </Button>
       </div>

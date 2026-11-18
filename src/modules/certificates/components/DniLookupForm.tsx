@@ -6,8 +6,8 @@
  *  - react-hook-form + dniLookupSchema. Mensaje genérico si no hay resultados (lo muestra PublicLookupPage).
  */
 
-import { useForm } from 'react-hook-form';
-import { parseForm } from '../../../lib/forms';
+import { useForm, useWatch } from 'react-hook-form';
+import { parseForm, faltaAlgo } from '../../../lib/forms';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { dniLookupSchema } from '../schemas';
@@ -21,9 +21,12 @@ export function DniLookupForm({ onSubmit, loading }: Props) {
   const {
     register,
     handleSubmit,
+    control,
     setError,
     formState: { errors },
   } = useForm<{ dni: string }>({ defaultValues: { dni: '' } });
+  // Deshabilita el submit mientras falte un obligatorio; la validación real sigue siendo la de zod en el submit.
+  const incompleto = faltaAlgo(useWatch({ control, name: ['dni'] }));
 
   const submit = handleSubmit((values) => {
     const data = parseForm(dniLookupSchema, values, setError);
@@ -43,7 +46,7 @@ export function DniLookupForm({ onSubmit, loading }: Props) {
           {...register('dni')}
         />
       </div>
-      <Button type="submit" disabled={loading}>
+      <Button type="submit" disabled={loading || incompleto}>
         {loading ? 'Buscando…' : 'Consultar'}
       </Button>
     </form>

@@ -16,9 +16,9 @@
  */
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
-import { parseForm } from '../../../lib/forms';
+import { parseForm, faltaAlgo } from '../../../lib/forms';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { positionSchema, type PositionFormValues } from '../schemas';
@@ -41,6 +41,7 @@ export function PositionForm({ position, onSaved, onCancel }: Props) {
   const {
     register,
     handleSubmit,
+    control,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<PositionFormValues>({
@@ -50,6 +51,8 @@ export function PositionForm({ position, onSaved, onCancel }: Props) {
       activo: position?.activo ?? true,
     },
   });
+  // Deshabilita el submit mientras falte un obligatorio; la validación real sigue siendo la de zod en el submit.
+  const incompleto = faltaAlgo(useWatch({ control, name: ['nombre'] }));
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null);
@@ -93,7 +96,7 @@ export function PositionForm({ position, onSaved, onCancel }: Props) {
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting || incompleto}>
           {isSubmitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear puesto'}
         </Button>
       </div>

@@ -2,10 +2,10 @@
  * components/LoginForm.tsx — Formulario email + contraseña.
  */
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useAuth } from '../../../auth/useAuth';
 import { errorMessage } from '../../../lib/apiError';
-import { parseForm } from '../../../lib/forms';
+import { parseForm, faltaAlgo } from '../../../lib/forms';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { loginSchema, type LoginFormValues } from '../schemas';
@@ -20,9 +20,12 @@ export function LoginForm({ onSuccess }: Props) {
   const {
     register,
     handleSubmit,
+    control,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({ defaultValues: { email: '', password: '' } });
+  // Deshabilita el submit mientras falte un obligatorio; la validación real sigue siendo la de zod en el submit.
+  const incompleto = faltaAlgo(useWatch({ control, name: ['email', 'password'] }));
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null);
@@ -57,7 +60,7 @@ export function LoginForm({ onSuccess }: Props) {
           {serverError}
         </p>
       )}
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" className="w-full" disabled={isSubmitting || incompleto}>
         {isSubmitting ? 'Ingresando…' : 'Ingresar'}
       </Button>
     </form>

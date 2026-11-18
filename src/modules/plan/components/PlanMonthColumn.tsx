@@ -6,7 +6,8 @@
  *  - Responsive: en <767px apilar los meses (lo resuelve la grilla de PlanPage: 1 columna en mobile).
  */
 
-import { FOCUS_RING, iconButtonClass } from '../../../components/ui/styles';
+import { iconButtonClass } from '../../../components/ui/styles';
+import { Chip } from '../../../components/ui/Chip';
 import { Badge } from '../../../components/ui/Badge';
 import type { PlanMonthEntry, PlanTopic } from '../types';
 import { PlanTopicPicker } from './PlanTopicPicker';
@@ -48,15 +49,10 @@ export function PlanMonthColumn({ entry, onSelectTopic, edit }: Props) {
       ) : (
         <ul className="flex flex-col gap-1">
           {entry.topics.map((t) => (
-            <li key={t.id} className="flex items-center justify-between gap-2 rounded bg-slate-50 px-2 py-1 text-sm">
-              <button
-                type="button"
-                className={'min-w-0 truncate text-left text-brand-700 underline-offset-2 hover:underline active:text-brand-900 rounded-sm ' + FOCUS_RING}
-                title="Ver quién debería tomarlo"
-                onClick={() => onSelectTopic(t)}
-              >
+            <li key={t.id} className="flex items-center justify-between gap-2 text-sm">
+              <Chip title="Ver quién debería tomarlo" onClick={() => onSelectTopic(t)} className="min-w-0">
                 {t.nombre}
-              </button>
+              </Chip>
               <span className="flex shrink-0 items-center gap-1">
                 {!t.activo && <Badge tone="neutral">Inactivo</Badge>}
                 {edit && (

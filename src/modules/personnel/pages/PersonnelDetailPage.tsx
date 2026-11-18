@@ -7,7 +7,7 @@
  *  - Ruta: /personnel/:id · roles: gerente, capacitador
  */
 
-import { LINK_CLASS } from '../../../components/ui/styles';
+import { buttonClass, LINK_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
@@ -33,7 +33,7 @@ export function PersonnelDetailPage() {
     return (
       <div className="text-center">
         <EmptyState title={notFound ? 'La persona no existe' : 'No se pudo cargar la ficha'} description={notFound ? undefined : errorMessage(person.error)} />
-        <Link to="/personnel" className={LINK_CLASS + ' text-sm'}>
+        <Link to="/personnel" className={buttonClass('secondary', 'mt-4')}>
           Volver al listado
         </Link>
       </div>

@@ -5,9 +5,9 @@
  */
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
-import { parseForm } from '../../../lib/forms';
+import { parseForm, faltaAlgo } from '../../../lib/forms';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { createTrainerSchema, type CreateTrainerFormValues } from '../schemas';
@@ -20,10 +20,13 @@ export function CreateTrainerForm() {
   const {
     register,
     handleSubmit,
+    control,
     setError,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateTrainerFormValues>({ defaultValues: { email: '', nombre: '', password: '' } });
+  // Deshabilita el submit mientras falte un obligatorio; la validación real sigue siendo la de zod en el submit.
+  const incompleto = faltaAlgo(useWatch({ control, name: ['nombre', 'email', 'password'] }));
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null);
@@ -51,7 +54,7 @@ export function CreateTrainerForm() {
         {...register('password')}
       />
       <div className="flex items-end">
-        <Button type="submit" disabled={isSubmitting} className="w-full md:w-auto">
+        <Button type="submit" disabled={isSubmitting || incompleto} className="w-full md:w-auto">
           {isSubmitting ? 'Creando…' : 'Crear capacitador'}
         </Button>
       </div>

@@ -7,9 +7,9 @@
  */
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
-import { parseForm } from '../../../lib/forms';
+import { parseForm, faltaAlgo } from '../../../lib/forms';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Select } from '../../../components/ui/Select';
@@ -35,6 +35,7 @@ export function PersonForm({ person, onSaved, onCancel }: Props) {
   const {
     register,
     handleSubmit,
+    control,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<PersonFormValues>({
@@ -47,6 +48,8 @@ export function PersonForm({ person, onSaved, onCancel }: Props) {
       activo: person?.activo ?? true,
     },
   });
+  // Deshabilita el submit mientras falte un obligatorio; la validación real sigue siendo la de zod en el submit.
+  const incompleto = faltaAlgo(useWatch({ control, name: ['dni', 'nombre', 'apellido', 'puestoId', 'fechaIngreso'] }));
 
   // REGLA DE NEGOCIO: solo puestos activos para asignar. En edición se muestra el actual aunque esté inactivo,
   // para no forzar un cambio de puesto (el trigger de la base solo valida cuando el puesto cambia).
@@ -99,7 +102,7 @@ export function PersonForm({ person, onSaved, onCancel }: Props) {
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting || incompleto}>
           {isSubmitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear persona'}
         </Button>
       </div>

@@ -7,9 +7,9 @@
  */
 
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { errorMessage } from '../../../lib/apiError';
-import { parseForm } from '../../../lib/forms';
+import { parseForm, faltaAlgo } from '../../../lib/forms';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Select } from '../../../components/ui/Select';
@@ -58,6 +58,8 @@ export function TopicForm({ topic, onSaved, onCancel }: Props) {
       activo: topic?.activo ?? true,
     },
   });
+  // Deshabilita el submit mientras falte un obligatorio; la validación real sigue siendo la de zod en el submit.
+  const incompleto = faltaAlgo(useWatch({ control, name: ['nombre', 'tipo', 'duracionHoras', 'puestoIds'] }));
 
   // REGLA DE NEGOCIO: solo puestos activos para asignar. En edición se muestran también los inactivos que el tema
   //   ya tiene, para no sacarlos sin que el Gerente se dé cuenta.
@@ -163,7 +165,7 @@ export function TopicForm({ topic, onSaved, onCancel }: Props) {
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting || incompleto}>
           {isSubmitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear tema'}
         </Button>
       </div>

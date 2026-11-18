@@ -29,3 +29,8 @@ export function safeInternalPath(path: unknown, fallback = '/'): string {
   if (!path.startsWith('/') || path.startsWith('//') || path.startsWith('/\\')) return fallback;
   return path;
 }
+
+/** true si algún valor (texto o lista) está vacío. Sirve para deshabilitar el submit mientras falte un obligatorio. */
+export function faltaAlgo(valores: unknown[]): boolean {
+  return valores.some((v) => (Array.isArray(v) ? v.length === 0 : v == null || String(v).trim() === ''));
+}
