@@ -27,7 +27,7 @@ export function Sidebar() {
           key={i.to}
           to={i.to}
           className={({ isActive }) =>
-            'whitespace-nowrap rounded-md px-3 py-2 ' +
+            'whitespace-nowrap rounded-md px-3 py-2 transition-colors duration-150 active:bg-brand-800 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-300 ' +
             (isActive ? 'bg-brand-700 font-medium' : 'text-brand-100 hover:bg-brand-800 hover:text-white')
           }
         >

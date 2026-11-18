@@ -6,6 +6,7 @@
  *  - Responsive: en <767px apilar los meses (lo resuelve la grilla de PlanPage: 1 columna en mobile).
  */
 
+import { FOCUS_RING, iconButtonClass } from '../../../components/ui/styles';
 import { Badge } from '../../../components/ui/Badge';
 import type { PlanMonthEntry, PlanTopic } from '../types';
 import { PlanTopicPicker } from './PlanTopicPicker';
@@ -50,7 +51,7 @@ export function PlanMonthColumn({ entry, onSelectTopic, edit }: Props) {
             <li key={t.id} className="flex items-center justify-between gap-2 rounded bg-slate-50 px-2 py-1 text-sm">
               <button
                 type="button"
-                className="min-w-0 truncate text-left text-slate-800 underline-offset-2 hover:underline"
+                className={'min-w-0 truncate text-left text-brand-700 underline-offset-2 hover:underline active:text-brand-900 rounded-sm ' + FOCUS_RING}
                 title="Ver quién debería tomarlo"
                 onClick={() => onSelectTopic(t)}
               >
@@ -62,7 +63,7 @@ export function PlanMonthColumn({ entry, onSelectTopic, edit }: Props) {
                   <button
                     type="button"
                     aria-label={`Quitar ${t.nombre} de ${MES_NOMBRES[entry.mes - 1]}`}
-                    className="px-1 text-slate-500 hover:text-red-600"
+                    className={iconButtonClass(true)}
                     onClick={() => edit.onRemove(t.id)}
                   >
                     ✕

@@ -6,6 +6,7 @@
  *  - Solo activos. Resultado Aprobado/No aprobado por persona.
  */
 
+import { iconButtonClass } from '../../../components/ui/styles';
 import { useEffect, useState } from 'react';
 import type { AttendanceResult } from '../../../types/common';
 import { Button } from '../../../components/ui/Button';
@@ -151,7 +152,7 @@ export function AttendeePicker({ topic, value, onChange, error }: Props) {
                     <button
                       type="button"
                       aria-label={`Quitar a ${a.apellido}, ${a.nombre}`}
-                      className="px-1 text-slate-500 hover:text-red-600"
+                      className={iconButtonClass(true)}
                       onClick={() => remove(a.personId)}
                     >
                       ✕

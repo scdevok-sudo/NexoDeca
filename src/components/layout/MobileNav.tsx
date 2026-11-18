@@ -59,7 +59,7 @@ export function MobileNav({ open, onClose }: Props) {
                     <img src={logoBlanco} alt="Deca Electromecánica" className="h-auto w-36" />
                     <Dialog.Close
                       aria-label="Cerrar menú"
-                      className="rounded-md p-1 text-brand-100 transition-colors duration-100 ease-out hover:bg-brand-800 hover:text-white focus-visible:outline-2 focus-visible:outline-brand-300 motion-reduce:transition-none"
+                      className="rounded-md p-1 text-brand-100 transition-colors duration-150 hover:bg-brand-800 hover:text-white focus-visible:outline-2 focus-visible:outline-brand-300 motion-reduce:transition-none"
                     >
                       <X className="h-5 w-5" aria-hidden="true" />
                     </Dialog.Close>
@@ -71,7 +71,7 @@ export function MobileNav({ open, onClose }: Props) {
                       to={i.to}
                       onClick={onClose}
                       className={({ isActive }) =>
-                        'rounded-md px-3 py-2 ' +
+                        'rounded-md px-3 py-2 transition-colors duration-150 active:bg-brand-800 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-300 ' +
                         (isActive ? 'bg-brand-700 font-medium' : 'text-brand-100 hover:bg-brand-800 hover:text-white')
                       }
                     >

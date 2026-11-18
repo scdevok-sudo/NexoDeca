@@ -7,6 +7,7 @@
  *  - Rutas: /trainings/new y /trainings/:id/edit · roles: gerente, capacitador
  */
 
+import { LINK_CLASS } from '../../../components/ui/styles';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
 import { errorMessage } from '../../../lib/apiError';
@@ -25,7 +26,7 @@ export function TrainingFormPage() {
 
   const header = (title: string) => (
     <div className="flex flex-col gap-1">
-      <Link to={backTo} className="text-sm text-slate-500 hover:underline">
+      <Link to={backTo} className={LINK_CLASS + ' text-sm'}>
         ← Volver
       </Link>
       <h1 className="text-xl font-semibold text-slate-900">{title}</h1>

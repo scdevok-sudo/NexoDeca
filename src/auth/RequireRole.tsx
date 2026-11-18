@@ -9,6 +9,7 @@
  * PERMISOS: esto es solo UX. El permiso de verdad lo imponen RLS y las Edge Functions.
  */
 
+import { LINK_CLASS } from '../components/ui/styles';
 import type { ReactNode } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import type { Role } from '../types/common';
@@ -32,7 +33,7 @@ export function RequireRole({ roles, children }: Props) {
     return (
       <div className="p-8 text-center">
         <EmptyState title="No tenés permiso para ver esta pantalla" />
-        <Link to="/" className="text-sm text-slate-700 underline">
+        <Link to="/" className={LINK_CLASS + ' text-sm'}>
           Volver al inicio
         </Link>
       </div>

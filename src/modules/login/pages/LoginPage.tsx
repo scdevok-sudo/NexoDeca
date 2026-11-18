@@ -6,6 +6,7 @@
  * - Ruta: /login · roles: público
  */
 
+import { LINK_CLASS } from '../../../components/ui/styles';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
 import { safeInternalPath } from '../../../lib/forms';
@@ -29,7 +30,7 @@ export function LoginPage() {
         <LoginForm onSuccess={() => navigate(from, { replace: true })} />
         <p className="mt-6 text-center text-sm text-slate-600">
           ¿Querés ver tus certificados?{' '}
-          <Link to="/consulta" className="underline">
+          <Link to="/consulta" className={LINK_CLASS}>
             Consultá por DNI
           </Link>
         </p>

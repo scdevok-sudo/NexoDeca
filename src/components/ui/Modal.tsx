@@ -50,7 +50,7 @@ export function Modal({ open, title, onClose, children }: Props) {
                       <Dialog.Title className="text-lg font-semibold text-slate-900">{title}</Dialog.Title>
                       <Dialog.Close
                         aria-label="Cerrar"
-                        className="rounded-md p-1 text-slate-500 transition-colors duration-100 ease-out hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-brand-500 motion-reduce:transition-none"
+                        className="rounded-md p-1 text-slate-500 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 focus-visible:outline-2 focus-visible:outline-brand-500 motion-reduce:transition-none"
                       >
                         <X className="h-5 w-5" aria-hidden="true" />
                       </Dialog.Close>

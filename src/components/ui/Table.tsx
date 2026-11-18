@@ -70,7 +70,7 @@ export function Table<T>({
             <tr
               key={rowKey(row)}
               className={
-                'border-b border-slate-100 transition-colors duration-100 ease-out hover:bg-slate-50 motion-reduce:transition-none' +
+                'border-b border-slate-100 transition-colors duration-150 hover:bg-slate-50 motion-reduce:transition-none' +
                 (rowHref ? ' relative cursor-pointer' : '')
               }
             >
@@ -83,7 +83,7 @@ export function Table<T>({
                 <td className="px-4 py-3 text-right whitespace-nowrap">
                   <Link
                     to={rowHref(row)}
-                    className="inline-flex items-center gap-1 rounded-md font-medium text-brand-700 after:absolute after:inset-0 after:content-[''] hover:text-brand-900 focus-visible:outline-2 focus-visible:outline-brand-500"
+                    className="inline-flex items-center gap-1 rounded-md font-medium text-brand-700 after:absolute after:inset-0 after:content-[''] transition-colors duration-150 hover:text-brand-900 active:text-brand-900 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-brand-500"
                   >
                     {actionLabel}
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />

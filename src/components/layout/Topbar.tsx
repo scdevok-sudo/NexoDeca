@@ -30,7 +30,7 @@ export function Topbar({ onMenuClick }: Props) {
           type="button"
           onClick={onMenuClick}
           aria-label="Abrir menú"
-          className="rounded-md p-1.5 text-slate-600 transition-colors duration-100 ease-out hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 motion-reduce:transition-none"
+          className="rounded-md p-1.5 text-slate-600 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 motion-reduce:transition-none"
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
         </button>

@@ -9,6 +9,7 @@
  *  - Ruta: /trainings/:id · roles: gerente, capacitador
  */
 
+import { buttonClass, LINK_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
@@ -61,7 +62,7 @@ export function TrainingDetailPage() {
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const back = (
-    <Link to="/trainings" className="text-sm text-slate-500 hover:underline">
+    <Link to="/trainings" className={LINK_CLASS + ' text-sm'}>
       ← Volver al listado
     </Link>
   );
@@ -132,7 +133,7 @@ export function TrainingDetailPage() {
             {canEdit && (
               <Link
                 to={`/trainings/${t.id}/edit`}
-                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-center text-sm font-medium text-slate-800 hover:bg-slate-50"
+                className={buttonClass('secondary', 'text-center')}
               >
                 Editar
               </Link>

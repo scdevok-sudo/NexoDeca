@@ -6,6 +6,7 @@
  *  - Reutilizable en la vista pública y en la interna.
  */
 
+import { buttonClass } from '../../../components/ui/styles';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { Table, type Column } from '../../../components/ui/Table';
@@ -60,7 +61,7 @@ export function CertificateList({ items, onDownload, downloadingId, emptyText = 
       c.downloadUrl ? (
         <a
           href={c.downloadUrl}
-          className="inline-block rounded border border-slate-300 px-2 py-1 text-xs font-medium text-slate-800 hover:bg-slate-50"
+          className={buttonClass('secondary', 'px-2 py-1 text-xs')}
         >
           Descargar
         </a>

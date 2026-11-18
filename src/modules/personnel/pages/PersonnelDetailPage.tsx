@@ -7,6 +7,7 @@
  *  - Ruta: /personnel/:id · roles: gerente, capacitador
  */
 
+import { LINK_CLASS } from '../../../components/ui/styles';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
@@ -32,7 +33,7 @@ export function PersonnelDetailPage() {
     return (
       <div className="text-center">
         <EmptyState title={notFound ? 'La persona no existe' : 'No se pudo cargar la ficha'} description={notFound ? undefined : errorMessage(person.error)} />
-        <Link to="/personnel" className="text-sm underline">
+        <Link to="/personnel" className={LINK_CLASS + ' text-sm'}>
           Volver al listado
         </Link>
       </div>
@@ -42,7 +43,7 @@ export function PersonnelDetailPage() {
   const p = person.data;
   return (
     <section className="space-y-6">
-      <Link to="/personnel" className="text-sm text-slate-600 underline">
+      <Link to="/personnel" className={LINK_CLASS + ' text-sm'}>
         ← Personal
       </Link>
 

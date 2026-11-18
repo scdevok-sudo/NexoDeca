@@ -7,6 +7,7 @@
  *  - Ruta: /trainings · roles: gerente, capacitador
  */
 
+import { buttonClass } from '../../../components/ui/styles';
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../../auth/useAuth';
@@ -61,7 +62,7 @@ export function TrainingsListPage() {
         <div className="space-y-1"><h1 className="text-xl font-semibold text-slate-900">Capacitaciones dictadas</h1><p className="text-sm text-slate-600">Buscá por fecha, tema o capacitador y entrá al detalle para ver asistentes y certificados.</p></div>
         <Link
           to="/trainings/new"
-          className="rounded-md bg-brand-800 px-3 py-2 text-center text-sm font-medium text-white hover:bg-brand-700"
+          className={buttonClass('primary', 'text-center')}
         >
           Registrar capacitación
         </Link>
